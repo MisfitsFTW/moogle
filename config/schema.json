@@ -1,0 +1,123 @@
+{
+  "tables": [
+    {
+      "name": "Workers",
+      "description": "Employee/worker information for the organization",
+      "columns": [
+        {
+          "name": "ID",
+          "type": "string",
+          "description": "Unique employee identifier"
+        },
+        {
+          "name": "Corp",
+          "type": "string",
+          "description": "Corporate username or identifier"
+        },
+        {
+          "name": "Name",
+          "type": "string",
+          "description": "Employee first name"
+        },
+        {
+          "name": "Surname",
+          "type": "string",
+          "description": "Employee last name"
+        },
+        {
+          "name": "Gender",
+          "type": "string",
+          "description": "Employee gender (M/F)",
+          "values": ["M", "F"]
+        },
+        {
+          "name": "DOB",
+          "type": "date",
+          "description": "Date of birth"
+        },
+        {
+          "name": "Current_Position",
+          "type": "string",
+          "description": "Current job position/title"
+        },
+        {
+          "name": "Class",
+          "type": "number",
+          "description": "Employee classification level (3-7)"
+        },
+        {
+          "name": "Department",
+          "type": "string",
+          "description": "Department name",
+          "values": ["IT", "Operations", "Finance", "HR", "IMU"]
+        },
+        {
+          "name": "Section",
+          "type": "string",
+          "description": "Section within department",
+          "values": ["Logic", "Support", "Admin", "Analysis"]
+        },
+        {
+          "name": "Appointment_Date",
+          "type": "date",
+          "description": "Date of appointment"
+        },
+        {
+          "name": "Commencement_Date",
+          "type": "date",
+          "description": "Date employment commenced"
+        },
+        {
+          "name": "Confirmed_Appointment",
+          "type": "string",
+          "description": "Date appointment was confirmed (may be empty)"
+        },
+        {
+          "name": "Remarks",
+          "type": "string",
+          "description": "Employment status remarks",
+          "values": ["Probation", "Transferred", "Not Applicable", "New Employee", "Pending"]
+        },
+        {
+          "name": "Hours_of_Leave_Utilised",
+          "type": "number",
+          "description": "Total hours of leave used"
+        }
+      ]
+    }
+  ],
+  "exampleQueries": [
+    {
+      "question": "Show me all workers",
+      "intent": "Return all worker records"
+    },
+    {
+      "question": "Show me workers from the IT department",
+      "intent": "Filter workers where Department = 'IT'"
+    },
+    {
+      "question": "How many workers are in each department?",
+      "intent": "Group by Department and count workers"
+    },
+    {
+      "question": "Show me workers born after 1990",
+      "intent": "Filter workers where DOB year > 1990"
+    },
+    {
+      "question": "Who are the managers?",
+      "intent": "Filter workers where Current_Position contains 'manager'"
+    },
+    {
+      "question": "Show me female workers in HR",
+      "intent": "Filter workers where Gender = 'F' AND Department = 'HR'"
+    },
+    {
+      "question": "List workers on probation",
+      "intent": "Filter workers where Remarks = 'Probation'"
+    },
+    {
+      "question": "Show me the top 10 workers with most leave hours",
+      "intent": "Sort by Hours_of_Leave_Utilised descending, limit 10"
+    }
+  ]
+}
