@@ -2,39 +2,39 @@ const { GoogleGenerativeAI } = require('@google/generative-ai');
 const schemaService = require('./schemaService');
 
 class LLMService {
-    constructor() {
-        this.genAI = null;
-        this.model = null;
-        this.initializeClient();
+  constructor() {
+    this.genAI = null;
+    this.model = null;
+    this.initializeClient();
+  }
+
+  initializeClient() {
+    const apiKey = process.env.GOOGLE_GEMINI_API_KEY;
+
+    if (!apiKey) {
+      console.warn('⚠ Google Gemini API key not configured. LLM service will not work.');
+      console.warn('Please set GOOGLE_GEMINI_API_KEY in .env file');
+      console.warn('Get your free API key at: https://makersuite.google.com/app/apikey');
+      return;
     }
 
-    initializeClient() {
-        const apiKey = process.env.GOOGLE_GEMINI_API_KEY;
+    try {
+      this.genAI = new GoogleGenerativeAI(apiKey);
+      this.model = this.genAI.getGenerativeModel({ model: 'gemini-pro' });
+      console.log('✓ Google Gemini client initialized (gemini-pro)');
+    } catch (error) {
+      console.error('Error initializing Google Gemini client:', error.message);
+    }
+  }
 
-        if (!apiKey) {
-            console.warn('⚠ Google Gemini API key not configured. LLM service will not work.');
-            console.warn('Please set GOOGLE_GEMINI_API_KEY in .env file');
-            console.warn('Get your free API key at: https://makersuite.google.com/app/apikey');
-            return;
-        }
-
-        try {
-            this.genAI = new GoogleGenerativeAI(apiKey);
-            this.model = this.genAI.getGenerativeModel({ model: 'gemini-pro' });
-            console.log('✓ Google Gemini client initialized (gemini-pro)');
-        } catch (error) {
-            console.error('Error initializing Google Gemini client:', error.message);
-        }
+  async convertNaturalLanguageToQuery(naturalLanguageQuery) {
+    if (!this.model) {
+      throw new Error('Google Gemini client not initialized. Please configure API key in .env file.');
     }
 
-    async convertNaturalLanguageToQuery(naturalLanguageQuery) {
-        if (!this.model) {
-            throw new Error('Google Gemini client not initialized. Please configure API key in .env file.');
-        }
+    const schema = schemaService.getSchemaForLLM();
 
-        const schema = schemaService.getSchemaForLLM();
-
-        const systemPrompt = `You are a helpful assistant that converts natural language questions about employee/worker data into structured query instructions.
+    const systemPrompt = `You are a helpful assistant that converts natural language questions about employee/worker data into structured query instructions.
 
 ${schema}
 
@@ -83,27 +83,27 @@ USER QUESTION: ${naturalLanguageQuery}
 
 Return only the JSON query instructions:`;
 
-        try {
-            const result = await this.model.generateContent(systemPrompt);
-            const response = await result.response;
-            const content = response.text().trim();
+    try {
+      const result = await this.model.generateContent(systemPrompt);
+      const response = await result.response;
+      const content = response.text().trim();
 
-            // Remove markdown code blocks if present
-            let jsonContent = content;
-            if (content.includes('```')) {
-                jsonContent = content.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
-            }
+      // Remove markdown code blocks if present
+      let jsonContent = content;
+      if (content.includes('```')) {
+        jsonContent = content.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+      }
 
-            const queryInstructions = JSON.parse(jsonContent);
+      const queryInstructions = JSON.parse(jsonContent);
 
-            console.log('Query instructions generated:', JSON.stringify(queryInstructions, null, 2));
+      console.log('Query instructions generated:', JSON.stringify(queryInstructions, null, 2));
 
-            return queryInstructions;
-        } catch (error) {
-            console.error('Error calling Google Gemini:', error);
-            throw new Error(`Failed to process natural language query: ${error.message}`);
-        }
+      return queryInstructions;
+    } catch (error) {
+      console.error('Error calling Google Gemini:', error);
+      throw new Error(`Failed to process natural language query: ${error.message}`);
     }
+  }
 }
 
 module.exports = new LLMService();

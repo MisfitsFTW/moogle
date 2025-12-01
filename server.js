@@ -2,6 +2,8 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpec = require('./config/swagger');
 const apiRoutes = require('./routes/api');
 const dataService = require('./services/dataService');
 
@@ -13,8 +15,14 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Serve static files from public directory
+// Serve static files
 app.use(express.static(path.join(__dirname, 'public')));
+
+// Swagger API Documentation
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
+    customCss: '.swagger-ui .topbar { display: none }',
+    customSiteTitle: 'Moogle API Documentation'
+}));
 
 // API routes
 app.use('/api', apiRoutes);
@@ -46,6 +54,7 @@ async function startServer() {
         app.listen(PORT, () => {
             console.log(`\n✓ Server running on http://localhost:${PORT}`);
             console.log(`✓ API available at http://localhost:${PORT}/api`);
+            console.log(`✓ API Documentation: http://localhost:${PORT}/api-docs`);
             console.log(`✓ Health check: http://localhost:${PORT}/api/health\n`);
             console.log('Ready to process natural language queries! 🎉\n');
         });

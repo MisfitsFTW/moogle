@@ -28,7 +28,10 @@
           "name": "Gender",
           "type": "string",
           "description": "Employee gender (M/F)",
-          "values": ["M", "F"]
+          "values": [
+            "M",
+            "F"
+          ]
         },
         {
           "name": "DOB",
@@ -49,13 +52,24 @@
           "name": "Department",
           "type": "string",
           "description": "Department name",
-          "values": ["IT", "Operations", "Finance", "HR", "IMU"]
+          "values": [
+            "IT",
+            "Operations",
+            "Finance",
+            "HR",
+            "IMU"
+          ]
         },
         {
           "name": "Section",
           "type": "string",
           "description": "Section within department",
-          "values": ["Logic", "Support", "Admin", "Analysis"]
+          "values": [
+            "Logic",
+            "Support",
+            "Admin",
+            "Analysis"
+          ]
         },
         {
           "name": "Appointment_Date",
@@ -76,7 +90,13 @@
           "name": "Remarks",
           "type": "string",
           "description": "Employment status remarks",
-          "values": ["Probation", "Transferred", "Not Applicable", "New Employee", "Pending"]
+          "values": [
+            "Probation",
+            "Transferred",
+            "Not Applicable",
+            "New Employee",
+            "Pending"
+          ]
         },
         {
           "name": "Hours_of_Leave_Utilised",
