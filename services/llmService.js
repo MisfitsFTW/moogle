@@ -20,8 +20,8 @@ class LLMService {
 
     try {
       this.genAI = new GoogleGenerativeAI(apiKey);
-      this.model = this.genAI.getGenerativeModel({ model: 'gemini-pro' });
-      console.log('✓ Google Gemini client initialized (gemini-pro)');
+      this.model = this.genAI.getGenerativeModel({ model: 'gemini-2.0-flash-lite' });
+      console.log('✓ Google Gemini client initialized (gemini-2.0-flash-lite)');
     } catch (error) {
       console.error('Error initializing Google Gemini client:', error.message);
     }
