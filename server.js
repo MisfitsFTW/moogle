@@ -5,6 +5,7 @@ const path = require('path');
 const swaggerUi = require('swagger-ui-express');
 const swaggerSpec = require('./config/swagger');
 const apiRoutes = require('./routes/api');
+const authRoutes = require('./routes/auth');
 const dataService = require('./services/dataService');
 
 const app = express();
@@ -26,6 +27,12 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
 
 // API routes
 app.use('/api', apiRoutes);
+app.use('/api/auth', authRoutes);
+
+// OTC Sign-in Page
+app.get('/otc/signin', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'otc-signin.html'));
+});
 
 // Root route - serve index.html
 app.get('/', (req, res) => {

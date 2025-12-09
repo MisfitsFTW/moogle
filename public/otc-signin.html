@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In - Moogle</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4F46E5;
+            --primary-hover: #4338ca;
+            --bg: #F3F4F6;
+            --card-bg: #ffffff;
+            --text: #1F2937;
+            --text-light: #6B7280;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 2.5rem;
+            border-radius: 1rem;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            color: var(--text-light);
+            margin-bottom: 2rem;
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text);
+            margin-bottom: 0.5rem;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #D1D5DB;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            box-sizing: border-box;
+            transition: border-color 0.2s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        button {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        button:hover {
+            background-color: var(--primary-hover);
+        }
+
+        button:disabled {
+            background-color: #9CA3AF;
+            cursor: not-allowed;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .error {
+            color: #DC2626;
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+
+        .success {
+            color: #059669;
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="logo">Moogle</div>
+        <div class="subtitle">Sign in to your account</div>
+
+        <!-- Step 1: Email -->
+        <div id="step-email">
+            <div class="input-group">
+                <label for="email">Email address</label>
+                <input type="email" id="email" placeholder="you@example.com" required>
+            </div>
+            <button onclick="requestCode()" id="btn-request">Send Code</button>
+        </div>
+
+        <!-- Step 2: Code -->
+        <div id="step-code" class="hidden">
+            <div class="input-group">
+                <label for="code">Enter 6-digit code</label>
+                <input type="text" id="code" placeholder="123456" maxlength="6" style="letter-spacing: 0.5em; text-align: center;">
+            </div>
+            <button onclick="verifyCode()" id="btn-verify">Verify & Sign In</button>
+            <div style="margin-top: 1rem;">
+                <a href="#" onclick="resetFlow()" style="color: var(--text-light); font-size: 0.875rem; text-decoration: none;">Change email</a>
+            </div>
+        </div>
+
+        <div id="message-error" class="error"></div>
+        <div id="message-success" class="success"></div>
+    </div>
+
+    <script>
+        let currentEmail = '';
+
+        async function requestCode() {
+            const emailInput = document.getElementById('email');
+            const btn = document.getElementById('btn-request');
+            const errorMsg = document.getElementById('message-error');
+            const successMsg = document.getElementById('message-success');
+
+            if (!emailInput.value) {
+                showError('Please enter your email');
+                return;
+            }
+
+            btn.disabled = true;
+            btn.textContent = 'Sending...';
+            errorMsg.style.display = 'none';
+            successMsg.style.display = 'none';
+
+            try {
+                const response = await fetch('/api/auth/otc/request', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: emailInput.value })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    currentEmail = emailInput.value;
+                    document.getElementById('step-email').classList.add('hidden');
+                    document.getElementById('step-code').classList.remove('hidden');
+                    document.getElementById('code').focus();
+                    showSuccess('Code sent! Check the server console.');
+                } else {
+                    showError(data.error || 'Failed to send code');
+                }
+            } catch (err) {
+                showError('Network error. Please try again.');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Send Code';
+            }
+        }
+
+        async function verifyCode() {
+            const codeInput = document.getElementById('code');
+            const btn = document.getElementById('btn-verify');
+            
+            if (!codeInput.value) {
+                showError('Please enter the code');
+                return;
+            }
+
+            btn.disabled = true;
+            btn.textContent = 'Verifying...';
+
+            try {
+                const response = await fetch('/api/auth/otc/verify', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: currentEmail, code: codeInput.value })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showSuccess('Login successful! Redirecting...');
+                    localStorage.setItem('token', data.token);
+                    setTimeout(() => {
+                        window.location.href = '/';
+                    }, 1000);
+                } else {
+                    showError(data.error || 'Invalid code');
+                }
+            } catch (err) {
+                showError('Network error. Please try again.');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Verify & Sign In';
+            }
+        }
+
+        function resetFlow() {
+            document.getElementById('step-email').classList.remove('hidden');
+            document.getElementById('step-code').classList.add('hidden');
+            document.getElementById('message-error').style.display = 'none';
+            document.getElementById('message-success').style.display = 'none';
+        }
+
+        function showError(msg) {
+            const el = document.getElementById('message-error');
+            el.textContent = msg;
+            el.style.display = 'block';
+        }
+
+        function showSuccess(msg) {
+            const el = document.getElementById('message-success');
+            el.textContent = msg;
+            el.style.display = 'block';
+        }
+    </script>
+</body>
+</html>

@@ -104,6 +104,47 @@ Return only the JSON query instructions:`;
       throw new Error(`Failed to process natural language query: ${error.message}`);
     }
   }
+
+  async generateDAX(naturalLanguageQuery, schemaInfo) {
+    if (!this.model) {
+      throw new Error('Google Gemini client not initialized.');
+    }
+
+    const schemaDescription = schemaInfo ?
+      `Schema Tables: ${JSON.stringify(schemaInfo.tables)}\nSchema Columns: ${JSON.stringify(schemaInfo.columns)}` :
+      "Schema not available. Please infer standard DAX patterns.";
+
+    const systemPrompt = `You are an expert Power BI DAX developer.
+Your task is to translate a natural language question into a valid DAX query.
+
+${schemaDescription}
+
+User Question: "${naturalLanguageQuery}"
+
+Rules:
+1. Return ONLY the DAX query. No markdown, no explanations.
+2. Use EVALUATE at the start if it's a table query.
+3. If it's a scalar value (like a count), wrap it in ROW("Result", <measure>).
+4. Example: EVALUATE FILTER('Table', 'Table'[Column] = "Value")
+5. Example: EVALUATE ROW("Total", COUNTROWS('Table'))
+
+DAX Query:`;
+
+    try {
+      const result = await this.model.generateContent(systemPrompt);
+      const response = await result.response;
+      let dax = response.text().trim();
+
+      // Clean up markdown
+      dax = dax.replace(/```dax\n?/g, '').replace(/```\n?/g, '').trim();
+
+      console.log('Generated DAX:', dax);
+      return dax;
+    } catch (error) {
+      console.error('Error generating DAX:', error);
+      throw new Error('Failed to generate DAX query');
+    }
+  }
 }
 
 module.exports = new LLMService();

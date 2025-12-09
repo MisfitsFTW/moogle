@@ -180,4 +180,66 @@ router.get('/health', (req, res) => {
  */
 router.post('/query', queryController.processQuery);
 
+const powerBiService = require('../services/powerBiService');
+const llmService = require('../services/llmService');
+
+/**
+ * @swagger
+ * /api/powerbi/query:
+ *   post:
+ *     summary: Query Power BI dataset using natural language
+ *     tags: [Power BI]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [query]
+ *             properties:
+ *               query:
+ *                 type: string
+ *                 example: "Count the number of rows in the main table"
+ *     responses:
+ *       200:
+ *         description: Query results
+ *       500:
+ *         description: Error
+ */
+router.post('/powerbi/query', async (req, res) => {
+    try {
+        const { query } = req.body;
+        if (!query) {
+            return res.status(400).json({ success: false, error: 'Query is required' });
+        }
+
+        // 1. Get Schema (optional, but helps LLM)
+        // We could cache this, but for now let's fetch it or just pass null if it fails
+        let schema = null;
+        try {
+            schema = await powerBiService.getSchema();
+        } catch (e) {
+            console.warn('Could not fetch schema, proceeding without it');
+        }
+
+        // 2. Generate DAX
+        const daxQuery = await llmService.generateDAX(query, schema);
+
+        // 3. Execute DAX
+        const results = await powerBiService.executeQuery(daxQuery);
+
+        res.json({
+            success: true,
+            dax: daxQuery,
+            data: results
+        });
+    } catch (error) {
+        console.error('Power BI Endpoint Error:', error);
+        res.status(500).json({
+            success: false,
+            error: error.message
+        });
+    }
+});
+
 module.exports = router;
