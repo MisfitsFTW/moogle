@@ -37,6 +37,32 @@ exampleChips.forEach(chip => {
 
 exportBtn.addEventListener('click', exportToCSV);
 
+exportBtn.addEventListener('click', exportToCSV);
+
+// Tab Switching logic
+const tabBtns = document.querySelectorAll('.tab-btn');
+const searchTab = document.getElementById('searchTab');
+const dashboardTab = document.getElementById('dashboardTab');
+
+tabBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+        const tabId = btn.getAttribute('data-tab');
+
+        // Update active button state
+        tabBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        // Show/Hide tabs
+        if (tabId === 'search') {
+            searchTab.classList.remove('hidden');
+            dashboardTab.classList.add('hidden');
+        } else {
+            searchTab.classList.add('hidden');
+            dashboardTab.classList.remove('hidden');
+        }
+    });
+});
+
 // Main Functions
 async function handleSubmit() {
     const query = queryInput.value.trim();

@@ -35,19 +35,53 @@
             <!-- Query Input Section -->
             <section class="query-section">
                 <div class="query-card">
-                    <label for="queryInput" class="query-label">What would you like to know?</label>
-                    <div class="query-input-wrapper">
-                        <textarea id="queryInput" class="query-input"
-                            placeholder="e.g., Show me all workers from the IT department" rows="3"></textarea>
-                        <button id="submitBtn" class="submit-btn">
-                            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M22 2L11 13" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round" />
-                                <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round" />
-                            </svg>
-                            <span>Search</span>
-                        </button>
+                    <div class="tabs-container">
+                        <div class="tabs-nav">
+                            <button class="tab-btn active" data-tab="search">
+                                <svg class="tab-icon" viewBox="0 0 24 24" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z"
+                                        stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round" />
+                                </svg>
+                                <span>Search AI</span>
+                            </button>
+                            <button class="tab-btn" data-tab="dashboard">
+                                <svg class="tab-icon" viewBox="0 0 24 24" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M18 20V10M12 20V4M6 20V14" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                                <span>Analytics Dashboard</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="searchTab" class="tab-content">
+                        <label for="queryInput" class="query-label">What would you like to know?</label>
+                        <div class="query-input-wrapper">
+                            <textarea id="queryInput" class="query-input"
+                                placeholder="e.g., Show me all workers from the IT department" rows="3"></textarea>
+                            <button id="submitBtn" class="submit-btn">
+                                <svg class="btn-icon" viewBox="0 0 24 24" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M22 2L11 13" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round" />
+                                    <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                                <span>Search</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="dashboardTab" class="tab-content hidden">
+                        <div class="iframe-container">
+                            <iframe title="PBI DAX Testing" width="100%" height="600"
+                                src="https://app.powerbi.com/reportEmbed?reportId=eeba5249-bc5b-481e-9241-917ff03e98c8&autoAuth=true&embeddedDemo=true"
+                                frameborder="0" allowFullScreen="true"></iframe>
+                        </div>
                     </div>
 
                     <!-- Example Queries -->
