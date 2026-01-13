@@ -1,6 +1,6 @@
 const Joi = require('joi');
 const llmService = require('../services/llmService');
-const dataService = require('../services/dataService');
+const powerBiService = require('../services/powerBiService');
 
 const querySchema = Joi.object({
     query: Joi.string().required().min(3).max(500)
@@ -22,26 +22,27 @@ class QueryController {
             const { query } = value;
             console.log(`\n📝 Processing query: "${query}"`);
 
-            // Convert natural language to query instructions using LLM
-            const queryInstructions = await llmService.convertNaturalLanguageToQuery(query);
+            // 1. Fetch Schema from Power BI (or cache it)
+            // We fetch it every time to ensure we have the latest metadata, 
+            // but in production you might want to cache this.
+            console.log('Fetching Power BI Schema...');
+            const schema = await powerBiService.getSchema();
 
-            // Check for error in query instructions
-            if (queryInstructions.error) {
-                return res.status(400).json({
-                    success: false,
-                    error: queryInstructions.error,
-                    originalQuery: query
-                });
+            if (!schema) {
+                throw new Error('Failed to retrieve Power BI schema');
             }
 
-            // Execute query against CSV data
-            let results;
-            if (Object.keys(queryInstructions).length === 0) {
-                // Empty query instructions means "show all"
-                results = dataService.getAllData();
-            } else {
-                results = dataService.executeQuery(queryInstructions);
+            // 2. Generate DAX query using LLM
+            console.log('Generating DAX query...');
+            const daxQuery = await llmService.generateDAX(query, schema);
+
+            if (!daxQuery) {
+                throw new Error('Failed to generate DAX query');
             }
+
+            // 3. Execute DAX query against Power BI
+            console.log('Executing DAX query...');
+            const results = await powerBiService.executeQuery(daxQuery);
 
             console.log(`✓ Query executed successfully. Returned ${results.length} results`);
 
@@ -51,7 +52,7 @@ class QueryController {
                 data: results,
                 count: results.length,
                 query: query,
-                queryInstructions: queryInstructions
+                dax: daxQuery
             });
 
         } catch (error) {
@@ -67,13 +68,10 @@ class QueryController {
 
     async getHealth(req, res) {
         try {
-            const dataCount = dataService.getDataCount();
-
             return res.json({
                 success: true,
                 status: 'healthy',
-                dataLoaded: dataService.isLoaded,
-                recordCount: dataCount,
+                service: 'Power BI Integration',
                 timestamp: new Date().toISOString()
             });
         } catch (error) {

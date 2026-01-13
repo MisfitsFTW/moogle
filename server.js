@@ -54,8 +54,8 @@ async function startServer() {
     try {
         console.log('🚀 Starting Moogle server...\n');
 
-        // Load CSV data
-        await dataService.loadData();
+        // Initialize Power BI Service (optional pre-check)
+        // await powerBiService.getSchema();
 
         // Start Express server
         app.listen(PORT, () => {

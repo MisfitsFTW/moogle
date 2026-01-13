@@ -43,7 +43,9 @@ async function testPowerBi() {
     } catch (error) {
         console.error('\n❌ Test Failed:', error.message);
         if (error.response) {
-            console.error('   Response Data:', error.response.data);
+            console.error('   Response Status:', error.response.status);
+            console.error('   Response Data:', JSON.stringify(error.response.data, null, 2));
+            console.error('   Response Headers:', JSON.stringify(error.response.headers, null, 2));
         }
     }
 }
