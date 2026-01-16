@@ -36,12 +36,24 @@ class SchemaService {
         if (typeof sampleValue === 'number') type = 'number';
         else if (typeof sampleValue === 'boolean') type = 'boolean';
 
+        // Collect distinct values for string columns (to catch Enums like Status, Dept)
+        // Scan up to 1000 rows to be performant but comprehensive
+        let distinctValues = [];
+        if (type === 'string') {
+          const values = new Set();
+          for (let i = 0; i < Math.min(rows.length, 1000); i++) {
+            const val = rows[i][col];
+            if (val) values.add(val.toString().trim());
+          }
+          if (values.size > 0 && values.size <= 50) {
+            distinctValues = Array.from(values).slice(0, 50); // Cap at 50 just in case
+          }
+        }
+
         schemaText += `  - ${col} (${type})`;
 
-        // Add sample values for context if it's a string, to help LLM understand the data
-        if (type === 'string' && sampleValue) {
-          // For categorical-looking data, maybe show a few unique values? 
-          // keeping it simple for now, just description
+        if (distinctValues.length > 0) {
+          schemaText += ` [Values: ${distinctValues.join(', ')}]`;
         }
         schemaText += '\n';
       });

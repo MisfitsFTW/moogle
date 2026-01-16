@@ -95,8 +95,13 @@ class DataService {
                             case 'equals':
                             case '=':
                                 return value.toString().toLowerCase() === filter.value.toString().toLowerCase();
+                            case 'not_equals':
+                            case '!=':
+                                return value.toString().toLowerCase() !== filter.value.toString().toLowerCase();
                             case 'contains':
                                 return value.toString().toLowerCase().includes(filter.value.toString().toLowerCase());
+                            case 'not_contains':
+                                return !value.toString().toLowerCase().includes(filter.value.toString().toLowerCase());
                             case '>':
                                 return parseFloat(value) > parseFloat(filter.value);
                             case '<':

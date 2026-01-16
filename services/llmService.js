@@ -45,7 +45,7 @@ Your task is to analyze the user's question and return a JSON object with query 
   "filters": [
     {
       "column": "column_name",
-      "operator": "equals|contains|>|<|>=|<=",
+      "operator": "equals|not_equals|contains|not_contains|>|<|>=|<=",
       "value": "value_to_filter"
     }
   ],
@@ -72,8 +72,10 @@ IMPORTANT RULES:
 4. For "show all" queries, return an empty object {} (besides table) or just specify columns.
 5. For counting queries, use groupBy and aggregate with count function.
 6. For filtering by text, use "contains" operator for partial matches, "equals" for exact matches.
-7. Return ONLY the JSON object, no explanations or markdown.
-8. If the question cannot be answered with the available data, return {"error": "explanation"}.
+7. Use "not_equals" or "not_contains" for negative filters (e.g., "not written off", "excluding IT").
+8. CHECK THE SCHEMA VALUES: If the schema lists [Values: ...], ALWAYS map the user's term to one of those exact values.
+9. Return ONLY the JSON object, no explanations or markdown.
+10. If the question cannot be answered with the available data, return {"error": "explanation"}.
 
 Examples:
 - "Show me all workers" → {"table": "workers", "limit": 100}
