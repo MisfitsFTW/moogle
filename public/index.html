@@ -13,109 +13,111 @@
 </head>
 
 <body>
-    <div class="container">
-        <!-- Header -->
+    <div class="web-wrapper">
+        <!-- Official Header -->
         <header class="header">
-            <div class="logo">
-                <svg class="logo-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                        stroke-linejoin="round" />
-                    <path d="M2 17L12 22L22 17" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                        stroke-linejoin="round" />
-                    <path d="M2 12L12 17L22 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                        stroke-linejoin="round" />
-                </svg>
-                <h1>Moogle</h1>
+            <div class="header-content">
+                <div class="logo-section">
+                    <h1>Moogle</h1>
+                    <span class="header-subtitle">Public Service Data Portal</span>
+                </div>
             </div>
-            <p class="tagline">Ask questions about your workforce in plain English</p>
         </header>
 
-        <!-- Main Content -->
-        <main class="main-content">
-            <!-- Query Input Section -->
-            <section class="query-section">
-                <div class="query-card">
-                    <label for="queryInput" class="query-label">What would you like to know?</label>
-                    <div class="query-input-wrapper">
-                        <textarea id="queryInput" class="query-input"
-                            placeholder="e.g., Show me all workers from the IT department" rows="3"></textarea>
-                        <button id="submitBtn" class="submit-btn">
-                            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M22 2L11 13" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round" />
-                                <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round" />
-                            </svg>
-                            <span>Search</span>
-                        </button>
-                    </div>
+        <div class="container">
+            <!-- Tab Navigation -->
+            <nav class="tab-nav">
+                <button class="tab-btn active" data-tab="tab-query">Natural Language Query</button>
+                <button class="tab-btn" data-tab="tab-dashboard">Power BI Dashboard</button>
+            </nav>
 
-                    <!-- Example Queries -->
-                    <div class="examples">
-                        <p class="examples-label">Try asking:</p>
-                        <div class="example-chips">
-                            <button class="example-chip" data-query="Show me all workers">Show me all workers</button>
-                            <button class="example-chip" data-query="How many workers are in each department?">Workers
-                                by department</button>
-                            <button class="example-chip" data-query="Show me workers from the IT department">IT
-                                department workers</button>
-                            <button class="example-chip" data-query="Who are the managers?">Find managers</button>
-                            <button class="example-chip" data-query="Show me workers on probation">Workers on
-                                probation</button>
+            <!-- Main Content -->
+            <main class="main-content">
+                <!-- Tab: Query -->
+                <div id="tab-query" class="tab-content active">
+                    <!-- Query Input Section -->
+                    <section class="query-section">
+                        <div class="query-card">
+                            <label for="queryInput" class="query-label">Search Public Service Data</label>
+                            <div class="query-input-wrapper">
+                                <textarea id="queryInput" class="query-input"
+                                    placeholder="Example: Show me all written off assets in the IT department..."
+                                    rows="3"></textarea>
+                                <button id="submitBtn" class="submit-btn">
+                                    <span>Search</span>
+                                    <svg class="btn-icon" viewBox="0 0 24 24" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M22 2L11 13" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round" />
+                                        <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                </button>
+                            </div>
+
+                            <!-- Example Queries -->
+                            <div class="examples">
+                                <p class="examples-label">Suggested Queries:</p>
+                                <div class="example-chips">
+                                    <button class="example-chip" data-query="Show me all workers">All Workers</button>
+                                    <button class="example-chip" data-query="How many workers in each department?">Dept
+                                        Count</button>
+                                    <button class="example-chip"
+                                        data-query="List all assets with expired warranty that are NOT written off">Active
+                                        Expired Assets</button>
+                                    <button class="example-chip" data-query="Who are the managers?">Managers</button>
+                                </div>
+                            </div>
                         </div>
+                    </section>
+
+                    <!-- Loading State -->
+                    <div id="loadingState" class="loading-state hidden">
+                        <div class="spinner"></div>
+                        <p>querying database...</p>
+                    </div>
+
+                    <!-- Error State -->
+                    <div id="errorState" class="error-state hidden">
+                        <h3 id="errorTitle">System Error</h3>
+                        <p id="errorMessage"></p>
+                    </div>
+
+                    <!-- Results Section -->
+                    <section id="resultsSection" class="results-section hidden">
+                        <div class="results-header">
+                            <div class="results-info">
+                                <h2>Results</h2>
+                                <span id="resultsCount" class="results-count"></span>
+                            </div>
+                            <button id="exportBtn" class="export-btn">
+                                Download CSV
+                            </button>
+                        </div>
+                        <div class="table-container">
+                            <table id="resultsTable" class="results-table">
+                                <thead id="tableHead"></thead>
+                                <tbody id="tableBody"></tbody>
+                            </table>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- Tab: Dashboard -->
+                <div id="tab-dashboard" class="tab-content">
+                    <div class="iframe-container">
+                        <iframe title="PBI DAX Testing" width="1140" height="541.25"
+                            src="https://app.powerbi.com/reportEmbed?reportId=eeba5249-bc5b-481e-9241-917ff03e98c8&autoAuth=true&embeddedDemo=true%22"
+                            frameborder="0" allowFullScreen="true"></iframe>
                     </div>
                 </div>
-            </section>
-
-            <!-- Loading State -->
-            <div id="loadingState" class="loading-state hidden">
-                <div class="spinner"></div>
-                <p>Processing your query...</p>
-            </div>
-
-            <!-- Error State -->
-            <div id="errorState" class="error-state hidden">
-                <svg class="error-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" />
-                    <path d="M12 8V12" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-                    <path d="M12 16H12.01" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-                </svg>
-                <h3 id="errorTitle">Something went wrong</h3>
-                <p id="errorMessage"></p>
-            </div>
-
-            <!-- Results Section -->
-            <section id="resultsSection" class="results-section hidden">
-                <div class="results-header">
-                    <div class="results-info">
-                        <h2>Results</h2>
-                        <span id="resultsCount" class="results-count"></span>
-                    </div>
-                    <button id="exportBtn" class="export-btn">
-                        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path
-                                d="M21 15V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V15"
-                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                            <polyline points="7 10 12 15 17 10" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round" />
-                            <line x1="12" y1="15" x2="12" y2="3" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round" />
-                        </svg>
-                        Export CSV
-                    </button>
-                </div>
-                <div class="table-container">
-                    <table id="resultsTable" class="results-table">
-                        <thead id="tableHead"></thead>
-                        <tbody id="tableBody"></tbody>
-                    </table>
-                </div>
-            </section>
-        </main>
+            </main>
+        </div>
 
         <!-- Footer -->
         <footer class="footer">
-            <p>Powered by Google Gemini &amp; Natural Language Processing</p>
+            <p><strong>Government Execution & Management Interface</strong> | Protected by Official Secrets Act</p>
+            <img src="/img/MEEC-EN.png" alt="MEEC Logo" class="footer-logo">
         </footer>
     </div>
 

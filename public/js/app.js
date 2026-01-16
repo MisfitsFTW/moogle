@@ -12,6 +12,8 @@ const tableHead = document.getElementById('tableHead');
 const tableBody = document.getElementById('tableBody');
 const exportBtn = document.getElementById('exportBtn');
 const exampleChips = document.querySelectorAll('.example-chip');
+const tabBtns = document.querySelectorAll('.tab-btn');
+const tabContents = document.querySelectorAll('.tab-content');
 
 // State
 let currentResults = [];
@@ -20,6 +22,21 @@ let currentResults = [];
 const API_BASE_URL = window.location.origin;
 
 // Event Listeners
+tabBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+        // Remove active class from all buttons and contents
+        tabBtns.forEach(b => b.classList.remove('active'));
+        tabContents.forEach(c => c.classList.remove('active'));
+
+        // Add active class to clicked button
+        btn.classList.add('active');
+
+        // Show corresponding content
+        const tabId = btn.getAttribute('data-tab');
+        document.getElementById(tabId).classList.add('active');
+    });
+});
+
 submitBtn.addEventListener('click', handleSubmit);
 queryInput.addEventListener('keydown', (e) => {
     if (e.key === 'Enter' && e.ctrlKey) {
@@ -91,36 +108,111 @@ function displayResults(data, count) {
     resultsCount.textContent = `${count} ${count === 1 ? 'result' : 'results'}`;
 
     // Get column names from first row
-    const columns = Object.keys(data[0]);
+    // Get column names from first row
+    const originalColumns = Object.keys(data[0]);
+    // Determine which columns to show (max 6)
+    const MAX_VISIBLE_COLS = 6;
+    const showExpand = originalColumns.length > MAX_VISIBLE_COLS;
+    const visibleColumns = showExpand ? originalColumns.slice(0, MAX_VISIBLE_COLS) : originalColumns;
 
     // Build table header
     tableHead.innerHTML = '';
     const headerRow = document.createElement('tr');
-    columns.forEach(column => {
+
+    // Expand header
+    if (showExpand) {
+        const th = document.createElement('th');
+        th.style.width = '40px';
+        headerRow.appendChild(th);
+    }
+
+    visibleColumns.forEach(column => {
         const th = document.createElement('th');
         th.textContent = formatColumnName(column);
         headerRow.appendChild(th);
     });
+    headerRow.appendChild(document.createElement('th')); // Spacer for balance
     tableHead.appendChild(headerRow);
 
     // Build table body
     tableBody.innerHTML = '';
     data.forEach((row, index) => {
+        // Main Row
         const tr = document.createElement('tr');
-        tr.style.animationDelay = `${index * 0.02}s`;
 
-        columns.forEach(column => {
+        // Expand Button Cell
+        if (showExpand) {
             const td = document.createElement('td');
-            td.textContent = formatCellValue(row[column]);
+            const btn = document.createElement('button');
+            btn.className = 'toggle-btn';
+            btn.textContent = '▶';
+            btn.onclick = () => toggleDetails(index);
+            td.appendChild(btn);
+            tr.appendChild(td);
+        }
+
+        visibleColumns.forEach(column => {
+            const td = document.createElement('td');
+            td.textContent = formatCellValue(row[column], column);
             tr.appendChild(td);
         });
 
         tableBody.appendChild(tr);
+
+        // Detail Row (Hidden by default)
+        if (showExpand) {
+            const detailTr = document.createElement('tr');
+            detailTr.id = `detail-${index}`;
+            detailTr.className = 'details-row hidden'; // Ensure hidden class is used
+            const detailTd = document.createElement('td');
+            detailTd.colSpan = visibleColumns.length + 1;
+
+            const detailGrid = document.createElement('div');
+            detailGrid.className = 'details-grid';
+
+            originalColumns.forEach(col => {
+                const item = document.createElement('div');
+                item.className = 'detail-item';
+
+                const label = document.createElement('div');
+                label.className = 'detail-label';
+                label.textContent = formatColumnName(col);
+
+                const value = document.createElement('div');
+                value.className = 'detail-value';
+                value.textContent = formatCellValue(row[col], col);
+
+                item.appendChild(label);
+                item.appendChild(value);
+                detailGrid.appendChild(item);
+            });
+
+            detailTd.appendChild(detailGrid);
+            detailTr.appendChild(detailTd);
+            tableBody.appendChild(detailTr);
+        }
     });
 
     // Show results section with animation
     resultsSection.classList.remove('hidden');
+    resultsSection.style.display = 'block'; // Force display just in case
     resultsSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function toggleDetails(index) {
+    const detailRow = document.getElementById(`detail-${index}`);
+    if (detailRow) {
+        const isHidden = detailRow.classList.contains('hidden');
+        if (isHidden) {
+            detailRow.classList.remove('hidden');
+            // detailRow.style.display = 'table-row';
+        } else {
+            detailRow.classList.add('hidden');
+            // detailRow.style.display = 'none';
+        }
+
+        // Update button arrow logic could go here
+    }
 }
 
 function showError(title, message) {
@@ -128,12 +220,18 @@ function showError(title, message) {
     errorTitle.textContent = title;
     errorMessage.textContent = message;
     errorState.classList.remove('hidden');
+    errorState.style.display = 'block';
 }
 
 function hideAll() {
     loadingState.classList.add('hidden');
+    // loadingState.style.display = 'none';
+
     errorState.classList.add('hidden');
+    // errorState.style.display = 'none';
+
     resultsSection.classList.add('hidden');
+    // resultsSection.style.display = 'none';
 }
 
 function formatColumnName(columnName) {
@@ -147,9 +245,15 @@ function formatColumnName(columnName) {
         .trim();
 }
 
-function formatCellValue(value) {
+function formatCellValue(value, columnName) {
     if (value === null || value === undefined || value === '') {
         return '-';
+    }
+
+    // Check for ID columns that shouldn't be comma-formatted
+    const lowerCol = columnName ? columnName.toLowerCase() : '';
+    if (lowerCol.includes('id') || lowerCol.includes('number') || lowerCol.includes('phone') || lowerCol.includes('code')) {
+        return value.toString();
     }
 
     // Format numbers
