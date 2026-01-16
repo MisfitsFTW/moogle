@@ -34,13 +34,14 @@ class LLMService {
 
     const schema = schemaService.getSchemaForLLM();
 
-    const systemPrompt = `You are a helpful assistant that converts natural language questions about employee/worker data into structured query instructions.
+    const systemPrompt = `You are a helpful assistant that converts natural language questions about business data (workers, assets, emails) into structured query instructions.
 
 ${schema}
 
 Your task is to analyze the user's question and return a JSON object with query instructions. The JSON should have this structure:
 
 {
+  "table": "Exact_Table_Name_From_Schema",
   "filters": [
     {
       "column": "column_name",
@@ -65,19 +66,19 @@ Your task is to analyze the user's question and return a JSON object with query 
 }
 
 IMPORTANT RULES:
-1. Only include the fields that are needed for the query
-2. Use exact column names from the schema
-3. For "show all" queries, return an empty object {} or just specify columns
-4. For counting queries, use groupBy and aggregate with count function
-5. For filtering by text, use "contains" operator for partial matches, "equals" for exact matches
-6. Return ONLY the JSON object, no explanations or markdown
-7. If the question cannot be answered with the available data, return {"error": "explanation"}
+1. "table" is REQUIRED. Choose the most relevant table from the schema.
+2. Only include the fields that are needed for the query.
+3. Use exact column names from the schema.
+4. For "show all" queries, return an empty object {} (besides table) or just specify columns.
+5. For counting queries, use groupBy and aggregate with count function.
+6. For filtering by text, use "contains" operator for partial matches, "equals" for exact matches.
+7. Return ONLY the JSON object, no explanations or markdown.
+8. If the question cannot be answered with the available data, return {"error": "explanation"}.
 
 Examples:
-- "Show me all workers" → {}
-- "Show workers from IT" → {"filters": [{"column": "Department", "operator": "equals", "value": "IT"}]}
-- "How many workers in each department?" → {"groupBy": "Department", "aggregate": [{"function": "count", "alias": "count"}]}
-- "Top 10 workers with most leave" → {"sort": {"column": "Hours_of_Leave_Utilised", "direction": "desc"}, "limit": 10}
+- "Show me all workers" → {"table": "workers", "limit": 100}
+- "Show assets from IT" → {"table": "Assets", "filters": [{"column": "Department", "operator": "equals", "value": "IT"}]}
+- "Count emails by department" → {"table": "Generic Email Accounts", "groupBy": "Department", "aggregate": [{"function": "count", "alias": "count"}]}
 
 USER QUESTION: ${naturalLanguageQuery}
 

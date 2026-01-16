@@ -3,7 +3,7 @@ const llmService = require('../services/llmService');
 const dataService = require('../services/dataService');
 
 const querySchema = Joi.object({
-    query: Joi.string().required().min(3).max(500)
+    query: Joi.string().required()
 });
 
 class QueryController {
@@ -22,26 +22,28 @@ class QueryController {
             const { query } = value;
             console.log(`\n📝 Processing query: "${query}"`);
 
-            // Convert natural language to query instructions using LLM
+            // 1. Convert Natural Language to Query Instructions
+            console.log('Generating query instructions...');
             const queryInstructions = await llmService.convertNaturalLanguageToQuery(query);
 
-            // Check for error in query instructions
+            if (!queryInstructions) {
+                throw new Error('Failed to generate query instructions');
+            }
+
             if (queryInstructions.error) {
-                return res.status(400).json({
+                return res.json({
                     success: false,
-                    error: queryInstructions.error,
-                    originalQuery: query
+                    answer: queryInstructions.error,
+                    query: query
                 });
             }
 
-            // Execute query against CSV data
-            let results;
-            if (Object.keys(queryInstructions).length === 0) {
-                // Empty query instructions means "show all"
-                results = dataService.getAllData();
-            } else {
-                results = dataService.executeQuery(queryInstructions);
-            }
+            const tableName = queryInstructions.table;
+            console.log(`Target Table: ${tableName || 'Single'}`);
+
+            // 2. Execute Query against Local Data
+            console.log('Executing query against local CSV data...');
+            const results = dataService.executeQuery(queryInstructions, tableName);
 
             console.log(`✓ Query executed successfully. Returned ${results.length} results`);
 
@@ -51,7 +53,7 @@ class QueryController {
                 data: results,
                 count: results.length,
                 query: query,
-                queryInstructions: queryInstructions
+                instructions: queryInstructions
             });
 
         } catch (error) {

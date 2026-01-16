@@ -4,41 +4,82 @@ const Papa = require('papaparse');
 
 class DataService {
     constructor() {
-        this.data = [];
+        this.data = {}; // Changed to object to hold multiple tables
         this.isLoaded = false;
     }
 
     async loadData() {
-        return new Promise((resolve, reject) => {
-            const csvPath = process.env.CSV_DATA_PATH || path.join(__dirname, '../data/workers.csv');
+        const dataDir = path.join(__dirname, '../data');
+        console.log(`Loading data from directory: ${dataDir}`);
 
-            console.log(`Loading data from: ${csvPath}`);
+        try {
+            if (!fs.existsSync(dataDir)) {
+                throw new Error(`Data directory not found: ${dataDir}`);
+            }
 
-            const fileContent = fs.readFileSync(csvPath, 'utf8');
+            const files = fs.readdirSync(dataDir);
+            const csvFiles = files.filter(file => file.toLowerCase().endsWith('.csv'));
 
-            Papa.parse(fileContent, {
-                header: true,
-                skipEmptyLines: true,
-                complete: (results) => {
-                    this.data = results.data;
-                    this.isLoaded = true;
-                    console.log(`✓ Loaded ${this.data.length} worker records`);
-                    resolve(this.data);
-                },
-                error: (error) => {
-                    console.error('Error parsing CSV:', error);
-                    reject(error);
-                }
+            if (csvFiles.length === 0) {
+                console.warn('No CSV files found in data directory');
+                return {};
+            }
+
+            const loadPromises = csvFiles.map(file => {
+                return new Promise((resolve, reject) => {
+                    const filePath = path.join(dataDir, file);
+                    const tableName = path.basename(file, '.csv');
+
+                    const fileContent = fs.readFileSync(filePath, 'utf8');
+
+                    Papa.parse(fileContent, {
+                        header: true,
+                        skipEmptyLines: true,
+                        dynamicTyping: true,
+                        complete: (results) => {
+                            this.data[tableName] = results.data;
+                            console.log(`✓ Loaded table '${tableName}' with ${results.data.length} records`);
+                            resolve();
+                        },
+                        error: (error) => {
+                            console.error(`Error parsing ${file}:`, error);
+                            reject(error);
+                        }
+                    });
+                });
             });
-        });
+
+            await Promise.all(loadPromises);
+            this.isLoaded = true;
+            return this.data;
+        } catch (error) {
+            console.error('Error loading data:', error);
+            throw error;
+        }
     }
 
-    executeQuery(queryInstructions) {
+    executeQuery(queryInstructions, tableName) {
         if (!this.isLoaded) {
             throw new Error('Data not loaded. Call loadData() first.');
         }
 
-        let results = [...this.data];
+        let targetData = null;
+        const availableTables = Object.keys(this.data);
+
+        // Determine which table to query
+        if (tableName && this.data[tableName]) {
+            targetData = this.data[tableName];
+        } else if (!tableName && availableTables.length === 1) {
+            // Default to the single table if only one exists
+            targetData = this.data[availableTables[0]];
+        } else {
+            const errorMsg = tableName
+                ? `Table '${tableName}' not found.`
+                : 'Table name is required for multi-table datasets.';
+            throw new Error(`${errorMsg} Available tables: ${availableTables.join(', ')}`);
+        }
+
+        let results = [...targetData];
 
         try {
             // Apply filters
@@ -47,12 +88,15 @@ class DataService {
                     results = results.filter(row => {
                         const value = row[filter.column];
 
+                        // Handle null/undefined values safely
+                        if (value === null || value === undefined) return false;
+
                         switch (filter.operator) {
                             case 'equals':
                             case '=':
-                                return value && value.toString().toLowerCase() === filter.value.toString().toLowerCase();
+                                return value.toString().toLowerCase() === filter.value.toString().toLowerCase();
                             case 'contains':
-                                return value && value.toString().toLowerCase().includes(filter.value.toString().toLowerCase());
+                                return value.toString().toLowerCase().includes(filter.value.toString().toLowerCase());
                             case '>':
                                 return parseFloat(value) > parseFloat(filter.value);
                             case '<':
@@ -75,6 +119,9 @@ class DataService {
                     const aVal = a[column];
                     const bVal = b[column];
 
+                    if (aVal === null || aVal === undefined) return 1;
+                    if (bVal === null || bVal === undefined) return -1;
+
                     // Try numeric comparison first
                     const aNum = parseFloat(aVal);
                     const bNum = parseFloat(bVal);
@@ -93,7 +140,7 @@ class DataService {
             if (queryInstructions.groupBy) {
                 const grouped = {};
                 results.forEach(row => {
-                    const key = row[queryInstructions.groupBy];
+                    const key = row[queryInstructions.groupBy] || 'Unknown';
                     if (!grouped[key]) {
                         grouped[key] = [];
                     }
@@ -150,7 +197,11 @@ class DataService {
     }
 
     getDataCount() {
-        return this.data.length;
+        const counts = {};
+        for (const [table, rows] of Object.entries(this.data)) {
+            counts[table] = rows.length;
+        }
+        return counts;
     }
 }
 
