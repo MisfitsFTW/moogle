@@ -1,59 +1,48 @@
-const fs = require('fs');
-const path = require('path');
-const Papa = require('papaparse');
+const sql = require('mssql');
 
 class DataService {
     constructor() {
-        this.data = {}; // Changed to object to hold multiple tables
+        this.data = {};
         this.isLoaded = false;
+        this.config = {
+            user: process.env.DB_USER,
+            password: process.env.DB_PASSWORD,
+            server: process.env.DB_SERVER,
+            database: process.env.DB_DATABASE,
+            options: {
+                encrypt: false, // Use this for local SQL Server
+                trustServerCertificate: process.env.DB_TRUST_SERVER_CERTIFICATE === 'true'
+            }
+        };
     }
 
     async loadData() {
-        const dataDir = path.join(__dirname, '../data');
-        console.log(`Loading data from directory: ${dataDir}`);
+        console.log(`Connecting to SQL Server: ${this.config.server}...`);
 
         try {
-            if (!fs.existsSync(dataDir)) {
-                throw new Error(`Data directory not found: ${dataDir}`);
+            const pool = await sql.connect(this.config);
+            console.log('✓ Connected to SQL Server');
+
+            // Dynamically fetch all user tables
+            const tablesResult = await pool.request().query("SELECT name FROM sys.tables");
+            const tablesToFetch = tablesResult.recordset.map(r => r.name);
+
+            console.log(`Found ${tablesToFetch.length} tables to load...`);
+
+            for (const tableName of tablesToFetch) {
+                try {
+                    const result = await pool.request().query(`SELECT * FROM [${tableName}]`);
+                    this.data[tableName] = result.recordset;
+                    console.log(`✓ Loaded table '${tableName}' from SQL with ${result.recordset.length} records`);
+                } catch (tableError) {
+                    console.warn(`⚠ Could not load table '${tableName}':`, tableError.message);
+                }
             }
 
-            const files = fs.readdirSync(dataDir);
-            const csvFiles = files.filter(file => file.toLowerCase().endsWith('.csv'));
-
-            if (csvFiles.length === 0) {
-                console.warn('No CSV files found in data directory');
-                return {};
-            }
-
-            const loadPromises = csvFiles.map(file => {
-                return new Promise((resolve, reject) => {
-                    const filePath = path.join(dataDir, file);
-                    const tableName = path.basename(file, '.csv');
-
-                    const fileContent = fs.readFileSync(filePath, 'utf8');
-
-                    Papa.parse(fileContent, {
-                        header: true,
-                        skipEmptyLines: true,
-                        dynamicTyping: true,
-                        complete: (results) => {
-                            this.data[tableName] = results.data;
-                            console.log(`✓ Loaded table '${tableName}' with ${results.data.length} records`);
-                            resolve();
-                        },
-                        error: (error) => {
-                            console.error(`Error parsing ${file}:`, error);
-                            reject(error);
-                        }
-                    });
-                });
-            });
-
-            await Promise.all(loadPromises);
             this.isLoaded = true;
             return this.data;
         } catch (error) {
-            console.error('Error loading data:', error);
+            console.error('Error connecting to/loading data from SQL Server:', error);
             throw error;
         }
     }
