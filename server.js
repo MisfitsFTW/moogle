@@ -21,7 +21,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Swagger API Documentation
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
     customCss: '.swagger-ui .topbar { display: none }',
-    customSiteTitle: 'Moogle API Documentation'
+    customSiteTitle: 'Public Service Data Portal API Documentation'
 }));
 
 // API routes
@@ -45,7 +45,7 @@ app.use((err, req, res, next) => {
 // Initialize data and start server
 async function startServer() {
     try {
-        console.log('🚀 Starting Moogle server...\n');
+        console.log('🚀 Starting Public Service Data Portal server...\n');
 
         // Load CSV data
         await dataService.loadData();

@@ -4,12 +4,12 @@ const options = {
     definition: {
         openapi: '3.0.0',
         info: {
-            title: 'Moogle API',
+            title: 'Public Service Data Portal API',
             version: '1.0.0',
-            description: 'Natural Language Query Portal for Organizational Worker Data - Powered by Google Gemini AI',
+            description: 'Natural Language Query Portal for Organizational Data - Powered by Google Gemini AI',
             contact: {
                 name: 'API Support',
-                email: 'support@moogle.local'
+                email: 'support@portal.local'
             }
         },
         servers: [

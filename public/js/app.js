@@ -301,7 +301,7 @@ function exportToCSV() {
     const url = URL.createObjectURL(blob);
 
     link.setAttribute('href', url);
-    link.setAttribute('download', `moogle-results-${Date.now()}.csv`);
+    link.setAttribute('download', `portal-results-${Date.now()}.csv`);
     link.style.visibility = 'hidden';
 
     document.body.appendChild(link);

@@ -74,13 +74,16 @@ IMPORTANT RULES:
 6. For filtering by text, use "contains" operator for partial matches, "equals" for exact matches.
 7. Use "not_equals" or "not_contains" for negative filters (e.g., "not written off", "excluding IT").
 8. CHECK THE SCHEMA VALUES: If the schema lists [Values: ...], ALWAYS map the user's term to one of those exact values.
-9. Return ONLY the JSON object, no explanations or markdown.
-10. If the question cannot be answered with the available data, return {"error": "explanation"}.
+9. For names or people-related columns (e.g., "User Assigned", "Name"), PREFER using the "contains" operator instead of "equals" to account for varying formats (e.g., "username - name").
+10. To search for multiple values in the same column (e.g., "Who are assets 123 and 456?"), provide multiple filter objects for that column.
+11. Return ONLY the JSON object, no explanations or markdown.
+12. If the question cannot be answered with the available data, return {"error": "explanation"}.
 
 Examples:
 - "Show me all workers" → {"table": "workers", "limit": 100}
-- "Show assets from IT" → {"table": "Assets", "filters": [{"column": "Department", "operator": "equals", "value": "IT"}]}
-- "Count emails by department" → {"table": "Generic Email Accounts", "groupBy": "Department", "aggregate": [{"function": "count", "alias": "count"}]}
+- "Show assets from IT" → {"table": "MEEC AMS Asset List", "filters": [{"column": "Department", "operator": "equals", "value": "IT"}]}
+- "Who are assets 325319 and 343224 assigned to?" → {"table": "MEEC AMS Asset List", "filters": [{"column": "MITA Inventory Number", "operator": "equals", "value": "325319"}, {"column": "MITA Inventory Number", "operator": "equals", "value": "343224"}], "columns": ["MITA Inventory Number", "User Assigned"]}
+- "All assets for Jonathan Gerada" → {"table": "MEEC AMS Asset List", "filters": [{"column": "User Assigned", "operator": "contains", "value": "Jonathan Gerada"}]}
 
 USER QUESTION: ${naturalLanguageQuery}
 

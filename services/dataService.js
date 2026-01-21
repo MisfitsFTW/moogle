@@ -84,35 +84,31 @@ class DataService {
         try {
             // Apply filters
             if (queryInstructions.filters && queryInstructions.filters.length > 0) {
-                queryInstructions.filters.forEach(filter => {
-                    results = results.filter(row => {
-                        const value = row[filter.column];
+                // Group filters by column to handle OR logic within same column
+                // e.g., Filter1 (Column A = Val1) OR Filter2 (Column A = Val2)
+                const filtersByColumn = {};
+                queryInstructions.filters.forEach(f => {
+                    if (!filtersByColumn[f.column]) filtersByColumn[f.column] = [];
+                    filtersByColumn[f.column].push(f);
+                });
 
-                        // Handle null/undefined values safely
-                        if (value === null || value === undefined) return false;
+                results = results.filter(row => {
+                    // Every column constraint must be satisfied (AND between different columns)
+                    return Object.entries(filtersByColumn).every(([column, columnFilters]) => {
+                        const positiveFilters = columnFilters.filter(f => !f.operator.startsWith('not'));
+                        const negativeFilters = columnFilters.filter(f => f.operator.startsWith('not'));
 
-                        switch (filter.operator) {
-                            case 'equals':
-                            case '=':
-                                return value.toString().toLowerCase() === filter.value.toString().toLowerCase();
-                            case 'not_equals':
-                            case '!=':
-                                return value.toString().toLowerCase() !== filter.value.toString().toLowerCase();
-                            case 'contains':
-                                return value.toString().toLowerCase().includes(filter.value.toString().toLowerCase());
-                            case 'not_contains':
-                                return !value.toString().toLowerCase().includes(filter.value.toString().toLowerCase());
-                            case '>':
-                                return parseFloat(value) > parseFloat(filter.value);
-                            case '<':
-                                return parseFloat(value) < parseFloat(filter.value);
-                            case '>=':
-                                return parseFloat(value) >= parseFloat(filter.value);
-                            case '<=':
-                                return parseFloat(value) <= parseFloat(filter.value);
-                            default:
-                                return true;
-                        }
+                        const value = row[column];
+
+                        // Match positive filters (OR-ed)
+                        const matchesPositive = positiveFilters.length === 0 ||
+                            positiveFilters.some(f => this._compare(value, f.value, f.operator));
+
+                        // Match negative filters (AND-ed)
+                        const matchesNegative = negativeFilters.length === 0 ||
+                            negativeFilters.every(f => this._compare(value, f.value, f.operator));
+
+                        return matchesPositive && matchesNegative;
                     });
                 });
             }
@@ -180,7 +176,7 @@ class DataService {
             }
 
             // Select specific columns
-            if (queryInstructions.columns && queryInstructions.columns.length > 0) {
+            if (queryInstructions.columns && queryInstructions.columns.length > 0 && !queryInstructions.columns.includes('*')) {
                 results = results.map(row => {
                     const filtered = {};
                     queryInstructions.columns.forEach(col => {
@@ -207,6 +203,73 @@ class DataService {
             counts[table] = rows.length;
         }
         return counts;
+    }
+
+    /**
+     * Helper to compare values with support for numbers, dates, and strings
+     */
+    _compare(value, filterValue, operator) {
+        if (value === null || value === undefined) return false;
+
+        const strVal = value.toString().toLowerCase();
+        const strFilter = filterValue.toString().toLowerCase();
+
+        // Handle string-only operators first
+        if (operator === 'contains') return strVal.includes(strFilter);
+        if (operator === 'not_contains') return !strVal.includes(strFilter);
+
+        // Try date comparison for range/equality
+        const dateVal = new Date(value);
+        const dateFilter = new Date(filterValue);
+
+        const isDateString = (s) => typeof s === 'string' && (s.includes('-') || s.includes('/'));
+
+        if (!isNaN(dateVal.getTime()) && !isNaN(dateFilter.getTime()) && (isDateString(value) || isDateString(filterValue))) {
+            switch (operator) {
+                case '>': return dateVal > dateFilter;
+                case '<': return dateVal < dateFilter;
+                case '>=': return dateVal >= dateFilter;
+                case '<=': return dateVal <= dateFilter;
+                case 'equals':
+                case '=': return dateVal.getTime() === dateFilter.getTime();
+                case 'not_equals':
+                case '!=': return dateVal.getTime() !== dateFilter.getTime();
+            }
+        }
+
+        // Try numeric comparison
+        const cleanVal = (v) => {
+            if (typeof v === 'number') return v;
+            if (typeof v !== 'string') return NaN;
+            // Remove everything except digits, dots, and minus signs
+            const cleaned = v.replace(/[^\d.-]/g, '');
+            return cleaned === '' ? NaN : parseFloat(cleaned);
+        };
+
+        const numVal = cleanVal(value);
+        const numFilter = cleanVal(filterValue);
+
+        if (!isNaN(numVal) && !isNaN(numFilter)) {
+            switch (operator) {
+                case '>': return numVal > numFilter;
+                case '<': return numVal < numFilter;
+                case '>=': return numVal >= numFilter;
+                case '<=': return numVal <= numFilter;
+                case 'equals':
+                case '=': return numVal === numFilter;
+                case 'not_equals':
+                case '!=': return numVal !== numFilter;
+            }
+        }
+
+        // Fallback to string equality
+        switch (operator) {
+            case 'equals':
+            case '=': return strVal === strFilter;
+            case 'not_equals':
+            case '!=': return strVal !== strFilter;
+            default: return true;
+        }
     }
 }
 
