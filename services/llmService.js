@@ -76,8 +76,10 @@ IMPORTANT RULES:
 8. CHECK THE SCHEMA VALUES: If the schema lists [Values: ...], ALWAYS map the user's term to one of those exact values.
 9. For names or people-related columns (e.g., "User Assigned", "Name"), PREFER using the "contains" operator instead of "equals" to account for varying formats (e.g., "username - name").
 10. To search for multiple values in the same column (e.g., "Who are assets 123 and 456?"), provide multiple filter objects for that column.
-11. Return ONLY the JSON object, no explanations or markdown.
-12. If the question cannot be answered with the available data, return {"error": "explanation"}.
+11. If the user asks for a specific name for a column or total (e.g., "named 'Total Laptops'"), ALWAYS use the "alias" field in the aggregate or ensure the column is mapped correctly.
+12. For queries asking for "Total Laptops", if counting, use {"function": "count", "alias": "Total Laptops"}.
+13. Return ONLY the JSON object, no explanations or markdown.
+14. If the question cannot be answered with the available data, return {"error": "explanation"}.
 
 Examples:
 - "Show me all workers" → {"table": "workers", "limit": 100}

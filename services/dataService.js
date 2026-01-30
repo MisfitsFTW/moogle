@@ -32,8 +32,10 @@ class DataService {
             for (const tableName of tablesToFetch) {
                 try {
                     const result = await pool.request().query(`SELECT * FROM [${tableName}]`);
-                    this.data[tableName] = result.recordset;
-                    console.log(`✓ Loaded table '${tableName}' from SQL with ${result.recordset.length} records`);
+                    // Strip BOM characters from keys and values
+                    const cleanedData = result.recordset.map(row => this._stripBOM(row));
+                    this.data[tableName] = cleanedData;
+                    console.log(`✓ Loaded table '${tableName}' from SQL with ${cleanedData.length} records (BOM cleaned)`);
                 } catch (tableError) {
                     console.warn(`⚠ Could not load table '${tableName}':`, tableError.message);
                 }
@@ -45,6 +47,31 @@ class DataService {
             console.error('Error connecting to/loading data from SQL Server:', error);
             throw error;
         }
+    }
+
+    /**
+     * Recursively strip UTF-8 BOM characters from object keys and string values
+     */
+    _stripBOM(obj) {
+        if (typeof obj !== 'object' || obj === null) {
+            if (typeof obj === 'string') {
+                return obj.replace(/^\uFEFF/, '').replace(/^ï»¿/, '');
+            }
+            return obj;
+        }
+
+        if (Array.isArray(obj)) {
+            return obj.map(item => this._stripBOM(item));
+        }
+
+        const newObj = {};
+        for (let key in obj) {
+            if (Object.prototype.hasOwnProperty.call(obj, key)) {
+                const newKey = key.replace(/^\uFEFF/, '').replace(/^ï»¿/, '');
+                newObj[newKey] = this._stripBOM(obj[key]);
+            }
+        }
+        return newObj;
     }
 
     executeQuery(queryInstructions, tableName) {
@@ -166,10 +193,17 @@ class DataService {
 
             // Select specific columns
             if (queryInstructions.columns && queryInstructions.columns.length > 0 && !queryInstructions.columns.includes('*')) {
+                // Ensure aggregated columns (aliases) and groupBy columns are included if they exist
+                const aggregateAliases = (queryInstructions.aggregate || []).map(agg => agg.alias || (agg.function === 'count' ? 'count' : `${agg.function}_${agg.column}`));
+                const groupByCol = queryInstructions.groupBy ? [queryInstructions.groupBy] : [];
+                const finalColumns = [...new Set([...queryInstructions.columns, ...aggregateAliases, ...groupByCol])];
+
                 results = results.map(row => {
                     const filtered = {};
-                    queryInstructions.columns.forEach(col => {
-                        filtered[col] = row[col];
+                    finalColumns.forEach(col => {
+                        if (row.hasOwnProperty(col)) {
+                            filtered[col] = row[col];
+                        }
                     });
                     return filtered;
                 });
