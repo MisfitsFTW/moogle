@@ -28,13 +28,7 @@ const queryController = require('../controllers/queryController');
  *                   format: date-time
  *                   example: 2025-12-01T12:00:00.000Z
  */
-router.get('/health', (req, res) => {
-    res.json({
-        status: 'ok',
-        message: 'Moogle API is running',
-        timestamp: new Date().toISOString()
-    });
-});
+router.get('/health', queryController.getHealth);
 
 /**
  * @swagger

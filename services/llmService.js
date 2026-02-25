@@ -1,11 +1,48 @@
 const { GoogleGenerativeAI } = require('@google/generative-ai');
+const readline = require('readline');
 const schemaService = require('./schemaService');
 
 class LLMService {
   constructor() {
     this.genAI = null;
     this.model = null;
+    this.selectedModelName = 'gemini-2.5-flash-lite'; // Default
+  }
+
+  async init() {
+    await this.selectModel();
     this.initializeClient();
+  }
+
+  async selectModel() {
+    const models = {
+      '1': 'gemini-2.5-flash-lite',
+      '2': 'gemini-2.5-pro',
+      '3': 'gemini-2.5-flash'
+    };
+
+    console.log('\n--- Select Generative Model ---');
+    console.log('1. gemini-2.5-flash-lite (Default)');
+    console.log('2. gemini-2.5-pro');
+    console.log('3. gemini-2.5-flash');
+
+    const rl = readline.createInterface({
+      input: process.stdin,
+      output: process.stdout
+    });
+
+    const question = (query) => new Promise((resolve) => rl.question(query, resolve));
+
+    const choice = await question('\nSelect a model (1-3) or press Enter for default: ');
+    rl.close();
+
+    if (choice && models[choice]) {
+      this.selectedModelName = models[choice];
+    } else if (choice) {
+      console.log('Invalid selection. Falling back to default.');
+    }
+
+    console.log(`\n✓ Selected model: ${this.selectedModelName}`);
   }
 
   initializeClient() {//
@@ -20,8 +57,8 @@ class LLMService {
 
     try {
       this.genAI = new GoogleGenerativeAI(apiKey);
-      this.model = this.genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
-      console.log('✓ Google Gemini client initialized (gemini-2.0-flash-lite)');
+      this.model = this.genAI.getGenerativeModel({ model: this.selectedModelName });
+      console.log(`✓ Google Gemini client initialized (${this.selectedModelName})`);
     } catch (error) {
       console.error('Error initializing Google Gemini client:', error.message);
     }
@@ -110,6 +147,63 @@ Return only the JSON query instructions:`;
     } catch (error) {
       console.error('Error calling Google Gemini:', error);
       throw new Error(`Failed to process natural language query: ${error.message}`);
+    }
+  }
+
+  // Feature Flag: Enable/Disable AI Generative Insights
+  ENABLE_GENERATIVE_INSIGHTS = false;
+
+  async generateResultSummary(naturalLanguageQuery, results, queryInstructions) {
+    if (!this.model) {
+      return { summary: null, insight: null };
+    }
+
+    const count = results.length;
+
+    // If generative insights are disabled, return a simple count-based summary
+    if (!this.ENABLE_GENERATIVE_INSIGHTS) {
+      return {
+        summary: `I found ${count} ${count === 1 ? 'result' : 'results'} for your query.`,
+        insight: null
+      };
+    }
+
+    try {
+      const prompt = `You are a data analyst for the Public Service of Malta.
+    Your task is to provide an analytical summary based on the following natural language query and its results.
+    
+    User Query: "${naturalLanguageQuery}"
+    Total Results Found: ${results.length}
+    Data Sample (top 5 rows): ${JSON.stringify(results.slice(0, 5))}
+    Table Instructions: ${JSON.stringify(queryInstructions)}
+
+    Your task is to provide feedback in JSON format with a single field:
+    1. "analysis": A professional summary of the results, followed by a "smart" insight or observation.
+    
+    Guidelines:
+    - The summary should be clear and professional (e.g., "I found 509 results for assets with expired warranty.").
+    - It should be followed immediately by a smart insight or observation in a natural flow (e.g., "...of which 200 are laptops" or "...and I noticed that the IT department has the highest count of these records.").
+    - Join them together so it reads like a single analytical result.
+    - If there are no results, just say "I couldn't find any results for that query."
+    - Be brief but helpful.
+
+    Return ONLY the following JSON structure: {"analysis": "..."}`;
+
+      const response = await this.model.generateContent(prompt);
+      const text = response.response.text();
+      const cleanedJson = text.replace(/```json|```/g, '').trim();
+      const result = JSON.parse(cleanedJson);
+
+      return {
+        summary: result.analysis,
+        insight: null // Insights are now unified in the summary
+      };
+    } catch (error) {
+      console.error('Error in generateResultSummary:', error);
+      return {
+        summary: `I found ${count} ${count === 1 ? 'result' : 'results'} for your query.`,
+        insight: null
+      };
     }
   }
 }

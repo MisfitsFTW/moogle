@@ -47,11 +47,18 @@ class QueryController {
 
             console.log(`✓ Query executed successfully. Returned ${results.length} results`);
 
-            // Return results
+            // 3. Generate Analytical Summary & Insights
+            console.log('Generating analytical feedback and insights...');
+            const aiFeedback = await llmService.generateResultSummary(query, results, queryInstructions);
+
+            // Return results with insights and sources
             return res.json({
                 success: true,
                 data: results,
                 count: results.length,
+                summary: aiFeedback.summary,
+                insight: aiFeedback.insight,
+                sources: [tableName || 'Main Data'],
                 query: query,
                 instructions: queryInstructions
             });

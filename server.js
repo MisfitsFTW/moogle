@@ -6,6 +6,7 @@ const swaggerUi = require('swagger-ui-express');
 const swaggerSpec = require('./config/swagger');
 const apiRoutes = require('./routes/api');
 const dataService = require('./services/dataService');
+const llmService = require('./services/llmService');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -46,6 +47,9 @@ app.use((err, req, res, next) => {
 async function startServer() {
     try {
         console.log('🚀 Starting Public Service Data Portal server...\n');
+
+        // Initialize LLM service (Select model)
+        await llmService.init();
 
         // Load CSV data
         await dataService.loadData();
