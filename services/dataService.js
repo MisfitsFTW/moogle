@@ -14,13 +14,25 @@ class DataService {
                 trustServerCertificate: process.env.DB_TRUST_SERVER_CERTIFICATE === 'true'
             }
         };
+        this.pool = null;
+    }
+
+    async connect() {
+        if (this.pool) return this.pool;
+        try {
+            this.pool = await sql.connect(this.config);
+            return this.pool;
+        } catch (error) {
+            console.error('Error connecting to SQL Server:', error);
+            throw error;
+        }
     }
 
     async loadData() {
         console.log(`Connecting to SQL Server: ${this.config.server}...`);
 
         try {
-            const pool = await sql.connect(this.config);
+            const pool = await this.connect();
             console.log('✓ Connected to SQL Server');
 
             // Dynamically fetch all user tables
@@ -46,6 +58,21 @@ class DataService {
         } catch (error) {
             console.error('Error connecting to/loading data from SQL Server:', error);
             throw error;
+        }
+    }
+
+    async getActiveModel() {
+        try {
+            const pool = await this.connect();
+            const result = await pool.request().query("SELECT TOP 1 model_name FROM [moogle_db].[dbo].[App_Models] WHERE model_value = 1");
+
+            if (result.recordset.length > 0) {
+                return result.recordset[0].model_name;
+            }
+            return null;
+        } catch (error) {
+            console.error('Error fetching active model from DB:', error.message);
+            return null;
         }
     }
 

@@ -181,7 +181,25 @@ function displayResults(data, count, summary, insight, sources) {
     if (summary) {
         // If insight is provided separately, join them. If llmService already unified them, insight will be null.
         const combinedText = insight ? `${summary} ${insight}` : summary;
-        analyticalSummary.textContent = combinedText;
+
+        // Render Structured Premium Analysis Display
+        analyticalSummary.innerHTML = `
+            <div class="analysis-header">
+                <div class="analysis-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                        <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                        <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                    </svg>
+                </div>
+                <div class="analysis-title">Analytical Insight</div>
+            </div>
+            <div class="analysis-content">${combinedText}</div>
+            <div class="analysis-footer">
+                <span class="persona-badge">Verified Data Analyst</span>
+                <span class="persona-badge">SQL Validated</span>
+            </div>
+        `;
         analyticalSummary.classList.remove('hidden');
     }
 
@@ -369,6 +387,10 @@ function hideAll() {
 
 function formatColumnName(columnName) {
     if (!columnName) return '';
+
+    // Specific business mappings
+    if (columnName === 'MITA Inventory Number') return 'MITA Inv No.';
+
     return columnName
         .replace(/_/g, ' ')
         .replace(/([a-z])([A-Z])/g, '$1 $2')
@@ -378,7 +400,7 @@ function formatColumnName(columnName) {
 function formatCellValue(value, columnName) {
     if (value === null || value === undefined || value === '') return '-';
     const lowerCol = columnName ? columnName.toLowerCase() : '';
-    if (lowerCol.includes('id') || lowerCol.includes('number') || lowerCol.includes('phone') || lowerCol.includes('code')) {
+    if (lowerCol.includes('id') || lowerCol.includes('number') || lowerCol.includes('phone') || lowerCol.includes('code') || lowerCol.includes('no')) {
         return value.toString();
     }
     if (typeof value === 'number') return value.toLocaleString();

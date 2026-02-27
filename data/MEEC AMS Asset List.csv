@@ -1,4 +1,4 @@
-MITA Inventory Number,Make,Model,Asset Type,Serial Number,Department,Site,Section,Date Commissioned,User Assigned,Cost,Depreciated Cost,Warranty Expired?
+ï»¿MITA Inv No.,Make,Model,Asset Type,Serial Number,Department,Site,Section,Date Commissioned,User Assigned,Cost,Depreciated Cost,Warranty Expired?
 126161,Asus,Other,Laptop,990AAS433633,Written Off,Written Off,Written Off,1/1/2007,Written Off,,0,Yes
 55074,DELL,Other,Laptop,0,Written Off,Written Off,Written Off,1/1/2007,Written Off,,0,Yes
 68352,Other,Other,Laptop,C4OAAS020647,Written Off,Written Off,Written Off,1/1/2007,Written Off,,0,Yes
@@ -1248,20 +1248,20 @@ M108846,Samsung,Galaxy A32,Remote Working Mobile,RF8RB1NQMBB,Cleansing and Maint
 303366,HP,EliteBook 840 G8,Laptop,5CG2115D0H,Office of the Permanent Secretary,OPS MEEC - St. Venera - MEEC,Office of the DG (Operations),12/29/2022,buttd005 - Dennis Buttigieg,,0,Yes
 303367,Remarkable,reMarkable,Tablet,RM11024432722,Office of the Permanent Secretary,OPS MEEC - St. Venera - MEEC,Office of the DG MEEC,12/29/2022,gatta079 - Antonella Gatt,,0,Yes
 303362,DELL,0,Docking Station,87Z2CB3,Information Management Unit,Barriera Wharf - MEEC,Information Management Unit,1/24/2023,Stock,,0,Yes
-307509,Apple,Macbook Pro,Laptop,R72MW3L9V4,Ministry Secretariat - MEEC,Barriera Wharf - MEEC,Ministry Secretariat - MEEC,2/2/2023,mangd033- Mangion Dalton,"€2,000","€1,125",Yes
-310069,HP,ProBook 445R G9,Laptop,5CD23740LS,Information Management Unit,OPS MEEC - St. Venera - MEEC,Information Management Unit,2/8/2023,borgm221,€865,€487,Yes
-315145,HP,ProBook 455 G9,Laptop,5CD248BXV3,Office of the Permanent Secretary,OPS MEEC - St. Venera - MEEC,People Management,2/25/2023,scibi008 - Isabel Sciberras,€865,€487,Yes
-315158,HP,ProBook 455 G9,Laptop,5CD248BXVY,Ambjent Malta,Ambjent Malta Head Office - Mosta - MEEC,Environmental Awareness and Outreach Directorate.,2/25/2023,debop028-Paul Debono,€865,€487,Yes
-315159,HP,ProBook 455 G9,Laptop,5CD248BXMT,Office of the Permanent Secretary,OPS MEEC - St. Venera - MEEC,Policy - Energy,2/25/2023,demav003-Vanessa Christine Demanuele,€865,€487,Yes
-315160,HP,ProBook 455 G9,Laptop,5CD248BXKZ,Ambjent Malta,Ambjent Malta Head Office - Mosta - MEEC,Environment Projects Directorate,2/25/2023,muscs122 - Shirley Muscat,€865,€487,Yes
-315161,HP,ProBook 455 G9,Laptop,5CD248BXLT,Ambjent Malta,Ambjent Malta Head Office - Mosta - MEEC,Environment Projects Directorate,2/25/2023,borga231- Alexander Borg Galea,€865,€487,Yes
-315162,HP,ProBook 455 G9,Laptop,5CD248BXLF,Ambjent Malta,Ambjent Malta Head Office - Mosta - MEEC,Office of the DG (Ambjent Malta),2/25/2023,porte039 - Elena Portelli,€865,€487,Yes
-315163,HP,ProBook 455 G9,Laptop,5CD248BXLJ,Ambjent Malta,Ambjent Malta Head Office - Mosta - MEEC,Design and Projects Office,2/25/2023,cassj286 - Joseph Cassar,€865,€487,Yes
-315164,HP,ProBook 455 G9,Laptop,5CD248BXRG,Ambjent Malta,"San Gakbu Premises, Triq Hal-Luqa, Paola - MEEC",Business Development Directorate,2/25/2023,galef056 - Franco Galea,€865,€487,Yes
-315165,HP,ProBook 455 G9,Laptop,5CD248BXKV,Ambjent Malta,Ambjent Malta Head Office - Mosta - MEEC,Office of the DG (Ambjent Malta),2/25/2023,baldj070-Jesmond Baldacchino,€865,€487,Yes
-315166,HP,ProBook 455 G9,Laptop,5CD248BXKS,Ambjent Malta,"San Gakbu Premises, Triq Hal-Luqa, Paola - MEEC",Business Development Directorate,2/25/2023,mifsp071 - Priscilla Mifsud,€865,€487,Yes
-315167,HP,ProBook 455 G9,Laptop,5CD248BXL5,Ambjent Malta,Ambjent Malta Head Office - Mosta - MEEC,Business Development Directorate,2/25/2023,sultr002 - Roderic Sultana,€865,€487,Yes
-315168,HP,ProBook 455 G9,Laptop,5CD248BXLG,Office of the Permanent Secretary,OPS MEEC - St. Venera - MEEC,Policy - Energy,2/25/2023,grims033-Sarah Grima,€865,€487,Yes
+307509,Apple,Macbook Pro,Laptop,R72MW3L9V4,Ministry Secretariat - MEEC,Barriera Wharf - MEEC,Ministry Secretariat - MEEC,2/2/2023,mangd033- Mangion Dalton,"â‚¬2,000","â‚¬1,125",Yes
+310069,HP,ProBook 445R G9,Laptop,5CD23740LS,Information Management Unit,OPS MEEC - St. Venera - MEEC,Information Management Unit,2/8/2023,borgm221,â‚¬865,â‚¬487,Yes
+315145,HP,ProBook 455 G9,Laptop,5CD248BXV3,Office of the Permanent Secretary,OPS MEEC - St. Venera - MEEC,People Management,2/25/2023,scibi008 - Isabel Sciberras,â‚¬865,â‚¬487,Yes
+315158,HP,ProBook 455 G9,Laptop,5CD248BXVY,Ambjent Malta,Ambjent Malta Head Office - Mosta - MEEC,Environmental Awareness and Outreach Directorate.,2/25/2023,debop028-Paul Debono,â‚¬865,â‚¬487,Yes
+315159,HP,ProBook 455 G9,Laptop,5CD248BXMT,Office of the Permanent Secretary,OPS MEEC - St. Venera - MEEC,Policy - Energy,2/25/2023,demav003-Vanessa Christine Demanuele,â‚¬865,â‚¬487,Yes
+315160,HP,ProBook 455 G9,Laptop,5CD248BXKZ,Ambjent Malta,Ambjent Malta Head Office - Mosta - MEEC,Environment Projects Directorate,2/25/2023,muscs122 - Shirley Muscat,â‚¬865,â‚¬487,Yes
+315161,HP,ProBook 455 G9,Laptop,5CD248BXLT,Ambjent Malta,Ambjent Malta Head Office - Mosta - MEEC,Environment Projects Directorate,2/25/2023,borga231- Alexander Borg Galea,â‚¬865,â‚¬487,Yes
+315162,HP,ProBook 455 G9,Laptop,5CD248BXLF,Ambjent Malta,Ambjent Malta Head Office - Mosta - MEEC,Office of the DG (Ambjent Malta),2/25/2023,porte039 - Elena Portelli,â‚¬865,â‚¬487,Yes
+315163,HP,ProBook 455 G9,Laptop,5CD248BXLJ,Ambjent Malta,Ambjent Malta Head Office - Mosta - MEEC,Design and Projects Office,2/25/2023,cassj286 - Joseph Cassar,â‚¬865,â‚¬487,Yes
+315164,HP,ProBook 455 G9,Laptop,5CD248BXRG,Ambjent Malta,"San Gakbu Premises, Triq Hal-Luqa, Paola - MEEC",Business Development Directorate,2/25/2023,galef056 - Franco Galea,â‚¬865,â‚¬487,Yes
+315165,HP,ProBook 455 G9,Laptop,5CD248BXKV,Ambjent Malta,Ambjent Malta Head Office - Mosta - MEEC,Office of the DG (Ambjent Malta),2/25/2023,baldj070-Jesmond Baldacchino,â‚¬865,â‚¬487,Yes
+315166,HP,ProBook 455 G9,Laptop,5CD248BXKS,Ambjent Malta,"San Gakbu Premises, Triq Hal-Luqa, Paola - MEEC",Business Development Directorate,2/25/2023,mifsp071 - Priscilla Mifsud,â‚¬865,â‚¬487,Yes
+315167,HP,ProBook 455 G9,Laptop,5CD248BXL5,Ambjent Malta,Ambjent Malta Head Office - Mosta - MEEC,Business Development Directorate,2/25/2023,sultr002 - Roderic Sultana,â‚¬865,â‚¬487,Yes
+315168,HP,ProBook 455 G9,Laptop,5CD248BXLG,Office of the Permanent Secretary,OPS MEEC - St. Venera - MEEC,Policy - Energy,2/25/2023,grims033-Sarah Grima,â‚¬865,â‚¬487,Yes
 305019,0,0,IP Phone,301110E060014665,Cleansing and Maintenance Division,CMD - Head Office - MEEC,Cleansing and Maintenance Division,3/7/2023,Vacant,,0,No
 307412,0,0,IP Phone,301110E060015962,Parliamentary Secretariat for Public Cleanliness,233 Republic str MEEC Parl Sec - MEEC,Parliamentary Secretariat for Public Cleanliness,3/7/2023,Bedingfield Glenn - bedig002,,0,No
 307417,0,0,IP Phone,301110E060014668,Information Management Unit,Barriera Wharf - MEEC,Information Management Unit,3/7/2023,BOS,,0,No
@@ -1272,26 +1272,26 @@ M100407,Samsung,Galaxy A32,Mobile Device,R58RB22J71N,Information Management Unit
 M100409,Samsung,Galaxy A32,Mobile Device,R58RB22J91R,Information Management Unit,Barriera Wharf - MEEC,0,3/9/2023,0,,0,No
 M100410,Samsung,Galaxy A32,Mobile Device,R58RB22GSWF,Information Management Unit,Barriera Wharf - MEEC,0,3/9/2023,0,,0,No
 M100412,Samsung,Galaxy A32,Mobile Device,R58RB22J98L,Information Management Unit,Barriera Wharf - MEEC,0,3/9/2023,0,,0,No
-315380,HP,ProBook 455 G9,Laptop,5CD248BXVQ,Cleansing and Maintenance Division,CMD - Head Office - MEEC,Cleansing and Maintenance Division,3/12/2023,Schembri Donna - sched077,€865,€487,Yes
-315381,HP,ProBook 455 G9,Laptop,5CD248BXQ7,Cleansing and Maintenance Division,CMD - Head Office - MEEC,Cleansing and Maintenance Division,3/12/2023,Galea Frankie - galef026,€865,€487,Yes
-315382,HP,ProBook 455 G9,Laptop,5CD248BXTF,Cleansing and Maintenance Division,CMD - Head Office - MEEC,Cleansing and Maintenance Division,3/12/2023,Mallia Kezaih - mallk051,€865,€487,Yes
-315385,HP,ProBook 455 G9,Laptop,5CD248BXPH,Office of the Permanent Secretary,OPS MEEC - St. Venera - MEEC,Strategic Communications Unit,3/12/2023,Mario Zammit - zammm081,€865,€487,Yes
-315386,HP,ProBook 455 G9,Laptop,5CD248BXP2,Cleansing and Maintenance Division,CMD - Head Office - MEEC,Cleansing and Maintenance Division,3/12/2023,Farrugia Charles - farrc334,€865,€487,Yes
-315387,HP,ProBook 455 G9,Laptop,5CD248BXSC,Cleansing and Maintenance Division,CMD - Head Office - MEEC,Cleansing and Maintenance Division,3/12/2023,Tabone Raymond - tabor004,€865,€487,Yes
+315380,HP,ProBook 455 G9,Laptop,5CD248BXVQ,Cleansing and Maintenance Division,CMD - Head Office - MEEC,Cleansing and Maintenance Division,3/12/2023,Schembri Donna - sched077,â‚¬865,â‚¬487,Yes
+315381,HP,ProBook 455 G9,Laptop,5CD248BXQ7,Cleansing and Maintenance Division,CMD - Head Office - MEEC,Cleansing and Maintenance Division,3/12/2023,Galea Frankie - galef026,â‚¬865,â‚¬487,Yes
+315382,HP,ProBook 455 G9,Laptop,5CD248BXTF,Cleansing and Maintenance Division,CMD - Head Office - MEEC,Cleansing and Maintenance Division,3/12/2023,Mallia Kezaih - mallk051,â‚¬865,â‚¬487,Yes
+315385,HP,ProBook 455 G9,Laptop,5CD248BXPH,Office of the Permanent Secretary,OPS MEEC - St. Venera - MEEC,Strategic Communications Unit,3/12/2023,Mario Zammit - zammm081,â‚¬865,â‚¬487,Yes
+315386,HP,ProBook 455 G9,Laptop,5CD248BXP2,Cleansing and Maintenance Division,CMD - Head Office - MEEC,Cleansing and Maintenance Division,3/12/2023,Farrugia Charles - farrc334,â‚¬865,â‚¬487,Yes
+315387,HP,ProBook 455 G9,Laptop,5CD248BXSC,Cleansing and Maintenance Division,CMD - Head Office - MEEC,Cleansing and Maintenance Division,3/12/2023,Tabone Raymond - tabor004,â‚¬865,â‚¬487,Yes
 307380,Lenovo,Other,Tablet,HA1BYAYG,Cleansing and Maintenance Division,CMD - Head Office - MEEC,Cleansing and Maintenance Division,3/13/2023,Chircop Frankie - 100453M,,0,Yes
 307381,Lenovo,Other,Tablet,HVA12M45,Cleansing and Maintenance Division,CMD - Head Office - MEEC,Cleansing and Maintenance Division,3/13/2023,pavil006,,0,Yes
 307382,Lenovo,Other,Tablet,HA1D81HC,Cleansing and Maintenance Division,CMD - Head Office - MEEC,Cleansing and Maintenance Division,3/13/2023,Vacant,,0,Yes
 307383,Lenovo,Other,Tablet,HVA0ZTL4,0,233 Republic str MEEC Parl Sec - MEEC,0,3/13/2023,Vacant,,0,Yes
 307384,Lenovo,Other,Tablet,HVA0ZTLG,Cleansing and Maintenance Division,CMD - Head Office - MEEC,Cleansing and Maintenance Division,3/13/2023,Vacant,,0,Yes
 307385,Lenovo,Other,Tablet,HA1D7ZJW,Cleansing and Maintenance Division,CMD - Head Office - MEEC,Cleansing and Maintenance Division,3/13/2023,Sebastian Cassar- casss117,,0,Yes
-315367,HP,ProBook 455 G9,Laptop,5CD248BXQW,Office of the Permanent Secretary,OPS MEEC - St. Venera - MEEC,Policy - Nature and Biodiversity,3/14/2023,lacil001-Luca Lacitignola,€865,€487,Yes
-315368,HP,ProBook 455 G9,Laptop,5CD248BXLN,Office of the Permanent Secretary,OPS MEEC - St. Venera - MEEC,People Management,3/14/2023,tantm041 - Mark Tanti,€865,€487,Yes
-315369,HP,ProBook 455 G9,Laptop,5CD248BXPV,Information Management Unit,Barriera Wharf - MEEC,Information Management Unit,3/14/2023,manga049 - Anton Mangion,€865,€487,Yes
-315370,HP,ProBook 455 G9,Laptop,5CD248BXL8,Office of the Permanent Secretary,OPS MEEC - St. Venera - MEEC,People Management,3/14/2023,colep004 - Philip Coleiro,€865,€487,Yes
-315371,HP,ProBook 455 G9,Laptop,5CD248BXKK,Office of the Permanent Secretary,OPS MEEC - St. Venera - MEEC,Policy,3/14/2023,darms016 - Stephan Darmanin,€865,€487,Yes
-315372,HP,ProBook 455 G9,Laptop,5CD248BXL4,Ambjent Malta,Ambjent Malta Head Office - Mosta - MEEC,Design and Projects Office,3/14/2023,muscj204- Josianne Muscat,€865,€487,Yes
-315373,HP,ProBook 455 G9,Laptop,5CD248BXKG,Ambjent Malta,Ambjent Malta Head Office - Mosta - MEEC,Office of the DG (Ambjent Malta),3/14/2023,ciapm021 - Marija Ciappara,€865,€487,Yes
-315374,HP,ProBook 455 G9,Laptop,5CD248BXKR,Ambjent Malta,Ambjent Malta Head Office - Mosta - MEEC,Office of the DG (Ambjent Malta),3/14/2023,bonea086 - Alexandra Bonnett Salibra,€865,€487,Yes
+315367,HP,ProBook 455 G9,Laptop,5CD248BXQW,Office of the Permanent Secretary,OPS MEEC - St. Venera - MEEC,Policy - Nature and Biodiversity,3/14/2023,lacil001-Luca Lacitignola,â‚¬865,â‚¬487,Yes
+315368,HP,ProBook 455 G9,Laptop,5CD248BXLN,Office of the Permanent Secretary,OPS MEEC - St. Venera - MEEC,People Management,3/14/2023,tantm041 - Mark Tanti,â‚¬865,â‚¬487,Yes
+315369,HP,ProBook 455 G9,Laptop,5CD248BXPV,Information Management Unit,Barriera Wharf - MEEC,Information Management Unit,3/14/2023,manga049 - Anton Mangion,â‚¬865,â‚¬487,Yes
+315370,HP,ProBook 455 G9,Laptop,5CD248BXL8,Office of the Permanent Secretary,OPS MEEC - St. Venera - MEEC,People Management,3/14/2023,colep004 - Philip Coleiro,â‚¬865,â‚¬487,Yes
+315371,HP,ProBook 455 G9,Laptop,5CD248BXKK,Office of the Permanent Secretary,OPS MEEC - St. Venera - MEEC,Policy,3/14/2023,darms016 - Stephan Darmanin,â‚¬865,â‚¬487,Yes
+315372,HP,ProBook 455 G9,Laptop,5CD248BXL4,Ambjent Malta,Ambjent Malta Head Office - Mosta - MEEC,Design and Projects Office,3/14/2023,muscj204- Josianne Muscat,â‚¬865,â‚¬487,Yes
+315373,HP,ProBook 455 G9,Laptop,5CD248BXKG,Ambjent Malta,Ambjent Malta Head Office - Mosta - MEEC,Office of the DG (Ambjent Malta),3/14/2023,ciapm021 - Marija Ciappara,â‚¬865,â‚¬487,Yes
+315374,HP,ProBook 455 G9,Laptop,5CD248BXKR,Ambjent Malta,Ambjent Malta Head Office - Mosta - MEEC,Office of the DG (Ambjent Malta),3/14/2023,bonea086 - Alexandra Bonnett Salibra,â‚¬865,â‚¬487,Yes
 307512,Logitech,0,Presentation Clicker,2238WD0219C9,Office of the Permanent Secretary,Barriera Wharf - MEEC,Office of the CIO,3/20/2023,Stock,,0,No
 307513,Aruba,0,Network Switch,CN23L3L19Q,Office of the Permanent Secretary,Barriera Wharf - MEEC,Office of the CIO,3/20/2023,Stock,,0,No
 307514,Aruba,0,Network Switch,CN21L3L5HP,Office of the Permanent Secretary,Barriera Wharf - MEEC,Office of the CIO,3/20/2023,Stock,,0,No
@@ -1339,7 +1339,7 @@ M101994,Xiaomi,Redmi Note 10S,Mobile Device,LZG6Z5YLIRLVWCFY,0,Barriera Wharf - 
 302567,I-Tec,0,Docking Station,2.02E+12,Office of the Permanent Secretary,OPS MEEC - St. Venera - MEEC,DCS,6/16/2023,borgd148-Daphne Borg,,0,No
 302568,0,0,Laptop Stand,0,Information Management Unit,OPS MEEC - St. Venera - MEEC,Information Management Unit,6/16/2023,0,,0,No
 302569,0,0,Laptop Stand,0,Ministry Secretariat - MEEC,Barriera Wharf - MEEC,Ministry Secretariat - MEEC,6/16/2023,dallm035 - Miriam Dalli 2,,0,No
-159667,Apple,MacBook Air,Laptop,H4HHKPQVRP,0,233 Republic str MEEC Parl Sec - MEEC,0,6/26/2023,Abela Claude - abelc151,"€1,200",€675,Yes
+159667,Apple,MacBook Air,Laptop,H4HHKPQVRP,0,233 Republic str MEEC Parl Sec - MEEC,0,6/26/2023,Abela Claude - abelc151,"â‚¬1,200",â‚¬675,Yes
 302553,HP,3005pr,Port Replicator,7CB829B783,Ministry Secretariat - MEEC,Barriera Wharf - MEEC,Ministry Secretariat - MEEC,6/26/2023,debog040-Gertrude Debono,,0,Yes
 302564,DELL,U2417H,Monitor,CN05K9YD7444568F397SA02,Office of the Permanent Secretary,Barriera Wharf - MEEC,Office of the CIO,7/11/2023,Written Off,,0,No
 307339,HP,Spectrex360,Laptop,CND3132QTG,Cleansing and Maintenance Division,CMD - Head Office - MEEC,Cleansing and Maintenance Division,8/23/2023,Costa Celine - costc008,,0,No
@@ -1427,7 +1427,7 @@ M100432,Samsung,Galaxy A32,Mobile Device,R58RB1V1SCP,Office of the Permanent Sec
 307547,Xiaomi,Pad 6,Tablet,K3VJ00367,0,OPS MEEC - St. Venera - MEEC,0,12/6/2023,0,,0,Yes
 307548,Xiaomi,Pad 6,Tablet,K3VJ00245,0,OPS MEEC - St. Venera - MEEC,0,12/6/2023,0,,0,Yes
 M100434,Samsung,Galaxy A32,Mobile Device,R58RB21858A,Office of the Permanent Secretary,Barriera Wharf - MEEC,Information Management Unit,12/19/2023,cutaa122-Abigail Cutajar,,0,No
-307325,Apple,Macbook Pro A2338,Laptop,LRQG2D7N3F,Ministry Secretariat - MEEC,Barriera Wharf - MEEC,Ministry Secretariat - MEEC,12/22/2023,formw002 - Formosa Wayne,"€2,200","€1,238",Yes
+307325,Apple,Macbook Pro A2338,Laptop,LRQG2D7N3F,Ministry Secretariat - MEEC,Barriera Wharf - MEEC,Ministry Secretariat - MEEC,12/22/2023,formw002 - Formosa Wayne,"â‚¬2,200","â‚¬1,238",Yes
 316999,Apple,iPad Pro,Tablet,SNHCQWT62FC,0,233 Republic str MEEC Parl Sec - MEEC,0,2/2/2024,Pisani Pierre - pisap010,,0,Yes
 319730,Apple,iPad Magic Keyboard,Smart Keyboard,W1393PM7XP,Parliamentary Secretariat for Public Cleanliness,233 Republic str MEEC Parl Sec - MEEC,Parliamentary Secretariat for Public Cleanliness,2/12/2024,Bedingfield Glenn - bedig002,,0,No
 319729,Apple,iPad Pro,Tablet,RP466LVVQF,0,233 Republic str MEEC Parl Sec - MEEC,0,2/15/2024,Bedingfield Glenn- bedig002,,0,Yes
@@ -1471,7 +1471,7 @@ M100434,Samsung,Galaxy A32,Mobile Device,R58RB21858A,Office of the Permanent Sec
 322714,AOC,27P2Q,Monitor,ASFQ19A000200,Office of the Permanent Secretary,OPS MEEC - St. Venera - MEEC,DCS,3/28/2024,Raymond Hili hilir012,,0,No
 322715,AOC,27P2Q,Monitor,ASFQ19A000199,Ambjent Malta,Argotti Mustering Room - MEEC,Environment Projects Directorate,3/28/2024,muscs122 - Shirley Muscat,,0,No
 322716,AOC,27P2Q,Monitor,ASFQ19A000198,Office of the Permanent Secretary,OPS MEEC - St. Venera - MEEC,Office of the CIO,3/28/2024,Christine Marie Gritti,,0,No
-319741,Lenovo,V15,Laptop,PF4FNE85,Cleansing and Maintenance Division,CMD - Head Office - MEEC,Cleansing and Maintenance Division,4/1/2024,Anouk Bugeja - bugea143,€740,€555,Yes
+319741,Lenovo,V15,Laptop,PF4FNE85,Cleansing and Maintenance Division,CMD - Head Office - MEEC,Cleansing and Maintenance Division,4/1/2024,Anouk Bugeja - bugea143,â‚¬740,â‚¬555,Yes
 319748,HP,P223,Monitor,CNK8101C3D,Cleansing and Maintenance Division,CMD - Head Office - MEEC,Cleansing and Maintenance Division,4/11/2024,Control Room,,0,No
 319749,HP,P223,Monitor,CNK81019M6,Cleansing and Maintenance Division,CMD - Head Office - MEEC,Cleansing and Maintenance Division,4/11/2024,Control Room,,0,No
 322709,AOC,27P2Q,Monitor,ASFQ19A000223,Office of the Permanent Secretary,OPS MEEC - St. Venera - MEEC,Strategy & Support,4/11/2024,gambc008 - Cynthia Gambin,,0,No
@@ -1623,7 +1623,7 @@ M100426,Samsung,Galaxy A32,Mobile Device,R58RB1V1CMN,Ambjent Malta,"Buskett Gard
 325318,HP,ProBook 445R G9,Laptop,5CD3236PG9,Office of the Permanent Secretary,OPS MEEC - St. Venera - MEEC,Office of the DG (Operations),1/31/2025,bonal010 - Lyndsey Bonavia,,0,No
 325319,HP,ProBook 445R G9,Laptop,5CD3236PHC,Information Management Unit,Barriera Wharf - MEEC,Information Management Unit,1/31/2025,aquig046 - Gary Aquilina,,0,No
 329249,DELL,Optiplex 3010,PC,1NSNV64,0,CMD - Head Office - MEEC,0,3/6/2025,0,,0,No
-329246,HP,Dragonfly G4,Laptop,5CG4425JYJ,Cleansing and Maintenance Division,CMD - Head Office - MEEC,Cleansing and Maintenance Division,3/7/2025,Deguara Ramon - degur001,"€1,499","€1,499",Yes
+329246,HP,Dragonfly G4,Laptop,5CG4425JYJ,Cleansing and Maintenance Division,CMD - Head Office - MEEC,Cleansing and Maintenance Division,3/7/2025,Deguara Ramon - degur001,"â‚¬1,499","â‚¬1,499",Yes
 329291,Samsung,Galaxy Tab S10+,Tablet,R52Y1057G7X,Cleansing and Maintenance Division,Written Off,Cleansing and Maintenance Division,3/10/2025,Written off,,0,Yes
 329292,Lenovo,Lenovo Tab M10 LTE,Tablet,HA20KPOM,Cleansing and Maintenance Division,CMD - Head Office - MEEC,Cleansing and Maintenance Division,3/13/2025,Vacant,,0,No
 329293,Lenovo Tab 2 P12,Lenovo Tab M10 LTE,Tablet,HNR04LZ9,Cleansing and Maintenance Division,CMD - Head Office - MEEC,Cleansing and Maintenance Division,3/13/2025,carue046-Elaine Caruana,,0,No
@@ -1680,7 +1680,7 @@ M100426,Samsung,Galaxy A32,Mobile Device,R58RB1V1CMN,Ambjent Malta,"Buskett Gard
 342591,DELL,Latitude 3550,Laptop,CX42VB4,Cleansing and Maintenance Division,CMD - Head Office - MEEC,Cleansing and Maintenance Division,10/30/2025,Vacant,,0,No
 342592,DELL,Latitude 3550,Laptop,86K0VB4,Cleansing and Maintenance Division,CMD - Head Office - MEEC,Cleansing and Maintenance Division,10/30/2025,Vacant,,0,No
 326440,HP,Zenbook,Laptop,5CG5213WL7,Parliamentary Secretariat for Public Cleanliness,233 Republic str MEEC Parl Sec - MEEC,Parliamentary Secretariat for Public Cleanliness,11/3/2025,bedig002,,0,No
-339618,HP,OmniBook X,Laptop,8CG52724ZX,Cleansing and Maintenance Division,CMD - Head Office - MEEC,DGs Office,11/6/2025,Portelli Charmaine - portc074,"€1,249","€1,249",Yes
+339618,HP,OmniBook X,Laptop,8CG52724ZX,Cleansing and Maintenance Division,CMD - Head Office - MEEC,DGs Office,11/6/2025,Portelli Charmaine - portc074,"â‚¬1,249","â‚¬1,249",Yes
 326446,AOC,0,Monitor,2PYR2HA009148,Ambjent Malta,Ambjent Malta Head Office - Mosta - MEEC,0,12/11/2025,Security Office,,0,No
 M100454,Samsung,Galaxy A32,Mobile Device,RF8RB094WJP,Information Management Unit,Barriera Wharf - MEEC,0,12/16/2025,Stock,,0,No
 307541,Samsung,0,External Storage Drive,S7MNS0Y932390,Ministry Secretariat - MEEC,Barriera Wharf - MEEC,Ministry Secretariat - MEEC,1/13/2026,dallj038-Jeremy Dalli,,0,No
@@ -1696,3 +1696,4 @@ M100454,Samsung,Galaxy A32,Mobile Device,RF8RB094WJP,Information Management Unit
 347216,DELL,Latitude 3550,Laptop,HYCT4C4,0,233 Republic str MEEC Parl Sec - MEEC,0,1/15/2026,0,,0,No
 347217,DELL,Latitude 3550,Laptop,CYCT4C4,0,233 Republic str MEEC Parl Sec - MEEC,0,1/15/2026,0,,0,No
 347218,DELL,Latitude 3550,Laptop,GWCT4C4,0,233 Republic str MEEC Parl Sec - MEEC,0,1/15/2026,0,,0,No
+

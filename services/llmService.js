@@ -1,6 +1,6 @@
 const { GoogleGenerativeAI } = require('@google/generative-ai');
-const readline = require('readline');
 const schemaService = require('./schemaService');
+const dataService = require('./dataService');
 
 class LLMService {
   constructor() {
@@ -15,34 +15,21 @@ class LLMService {
   }
 
   async selectModel() {
-    const models = {
-      '1': 'gemini-2.5-flash-lite',
-      '2': 'gemini-2.5-pro',
-      '3': 'gemini-2.5-flash'
-    };
+    console.log('\n--- Selecting Generative Model from Database ---');
 
-    console.log('\n--- Select Generative Model ---');
-    console.log('1. gemini-2.5-flash-lite (Default)');
-    console.log('2. gemini-2.5-pro');
-    console.log('3. gemini-2.5-flash');
+    try {
+      const dbModel = await dataService.getActiveModel();
 
-    const rl = readline.createInterface({
-      input: process.stdin,
-      output: process.stdout
-    });
-
-    const question = (query) => new Promise((resolve) => rl.question(query, resolve));
-
-    const choice = await question('\nSelect a model (1-3) or press Enter for default: ');
-    rl.close();
-
-    if (choice && models[choice]) {
-      this.selectedModelName = models[choice];
-    } else if (choice) {
-      console.log('Invalid selection. Falling back to default.');
+      if (dbModel) {
+        this.selectedModelName = dbModel;
+        console.log(`\n✓ Selected model from database: ${this.selectedModelName}`);
+      } else {
+        console.log(`\n⚠ No active model found in database ([moogle_db].[dbo].[App_Models]). Falling back to default: ${this.selectedModelName}`);
+      }
+    } catch (error) {
+      console.error('Error selecting model from database:', error.message);
+      console.log(`\n⚠ Falling back to default: ${this.selectedModelName}`);
     }
-
-    console.log(`\n✓ Selected model: ${this.selectedModelName}`);
   }
 
   initializeClient() {//
@@ -121,7 +108,7 @@ IMPORTANT RULES:
 Examples:
 - "Show me all workers" → {"table": "workers", "limit": 100}
 - "Show assets from IT" → {"table": "MEEC AMS Asset List", "filters": [{"column": "Department", "operator": "equals", "value": "IT"}]}
-- "Who are assets 325319 and 343224 assigned to?" → {"table": "MEEC AMS Asset List", "filters": [{"column": "MITA Inventory Number", "operator": "equals", "value": "325319"}, {"column": "MITA Inventory Number", "operator": "equals", "value": "343224"}], "columns": ["MITA Inventory Number", "User Assigned"]}
+- "Who are assets 325319 and 343224 assigned to?" → {"table": "MEEC AMS Asset List", "filters": [{"column": "MITA Inv No.", "operator": "equals", "value": "325319"}, {"column": "MITA Inv No.", "operator": "equals", "value": "343224"}], "columns": ["MITA Inv No.", "User Assigned"]}
 - "All assets for Jonathan Gerada" → {"table": "MEEC AMS Asset List", "filters": [{"column": "User Assigned", "operator": "contains", "value": "Jonathan Gerada"}]}
 
 USER QUESTION: ${naturalLanguageQuery}
@@ -151,7 +138,7 @@ Return only the JSON query instructions:`;
   }
 
   // Feature Flag: Enable/Disable AI Generative Insights
-  ENABLE_GENERATIVE_INSIGHTS = false;
+  ENABLE_GENERATIVE_INSIGHTS = true;
 
   async generateResultSummary(naturalLanguageQuery, results, queryInstructions) {
     if (!this.model) {
@@ -169,7 +156,7 @@ Return only the JSON query instructions:`;
     }
 
     try {
-      const prompt = `You are a data analyst for the Public Service of Malta.
+      const prompt = `Act as a professional Data Analyst for the Public Service of Malta.
     Your task is to provide an analytical summary based on the following natural language query and its results.
     
     User Query: "${naturalLanguageQuery}"
@@ -177,15 +164,17 @@ Return only the JSON query instructions:`;
     Data Sample (top 5 rows): ${JSON.stringify(results.slice(0, 5))}
     Table Instructions: ${JSON.stringify(queryInstructions)}
 
-    Your task is to provide feedback in JSON format with a single field:
-    1. "analysis": A professional summary of the results, followed by a "smart" insight or observation.
-    
+    Instructions:
+    1. Review and validate the provided data results.
+    2. Extract and explain key insights and patterns.
+    3. Explicitly identify any anomalies, outliers, or inconsistencies found.
+    4. Provide feedback in JSON format with a single field: "analysis".
+
     Guidelines:
-    - The summary should be clear and professional (e.g., "I found 509 results for assets with expired warranty.").
-    - It should be followed immediately by a smart insight or observation in a natural flow (e.g., "...of which 200 are laptops" or "...and I noticed that the IT department has the highest count of these records.").
-    - Join them together so it reads like a single analytical result.
+    - The summary should be authoritative, clear and professional.
+    - Join your observations together so it reads like a single analytical result.
     - If there are no results, just say "I couldn't find any results for that query."
-    - Be brief but helpful.
+    - Be brief but comprehensive in your analysis.
 
     Return ONLY the following JSON structure: {"analysis": "..."}`;
 
