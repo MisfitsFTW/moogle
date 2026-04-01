@@ -26,9 +26,42 @@ const sourcesGrid = document.getElementById('sourcesGrid');
 let currentResults = [];
 let isListening = false;
 let sourcesLoaded = false;
+let authStatus = { isAuthenticated: false, user: null };
 
 // API Configuration
 const API_BASE_URL = window.location.origin;
+
+// Auth Functions
+async function updateAuthUI() {
+    const authContainer = document.getElementById('authContainer');
+    if (!authContainer) return;
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/auth/status`);
+        authStatus = await response.json();
+
+        if (authStatus.isAuthenticated) {
+            authContainer.innerHTML = `
+                <div class="user-info">
+                    <span class="user-name">Welcome, ${authStatus.user.name || 'User'}</span>
+                    <button id="logoutBtn" class="btn btn-secondary btn-sm">Logout</button>
+                </div>
+            `;
+            document.getElementById('logoutBtn').addEventListener('click', () => {
+                window.location.href = '/logout';
+            });
+        } else {
+            authContainer.innerHTML = `
+                <button id="loginBtn" class="btn btn-primary btn-sm">Login</button>
+            `;
+            document.getElementById('loginBtn').addEventListener('click', () => {
+                window.location.href = '/login';
+            });
+        }
+    } catch (error) {
+        console.error('Error fetching auth status:', error);
+    }
+}
 
 // Voice Search Initialization
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -445,3 +478,4 @@ async function checkHealth() {
 }
 
 checkHealth();
+updateAuthUI();

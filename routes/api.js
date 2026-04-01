@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const queryController = require('../controllers/queryController');
+const authProvider = require('../services/authProvider');
 
 /**
  * @swagger
@@ -101,6 +102,6 @@ router.get('/health', queryController.getHealth);
  *                 error:
  *                   type: string
  */
-router.post('/query', queryController.processQuery);
+router.post('/query', authProvider.isAuthenticated.bind(authProvider), queryController.processQuery);
 
 module.exports = router;

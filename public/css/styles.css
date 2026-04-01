@@ -118,6 +118,41 @@ body {
   letter-spacing: 1px;
 }
 
+/* Authentication UI */
+.auth-section {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.user-name {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.btn-primary.btn-sm {
+  background-color: var(--primary);
+  border: 1px solid var(--primary-dark);
+  color: white;
+  padding: 6px 20px;
+  border-radius: 18px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-primary.btn-sm:hover {
+  background-color: var(--primary-dark);
+}
+
 .tagline {
   display: none;
   /* Hiding abstract tagline for official look */
