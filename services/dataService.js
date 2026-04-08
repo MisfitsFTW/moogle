@@ -321,6 +321,40 @@ class DataService {
             default: return true;
         }
     }
+    async saveUser(user) {
+        try {
+            const pool = await this.connect();
+            const request = pool.request();
+
+            request.input('userId', sql.NVarChar, user.id);
+            request.input('name', sql.NVarChar, user.name || null);
+            request.input('surname', sql.NVarChar, user.surname || null);
+            request.input('email', sql.NVarChar, user.email || null);
+
+            const query = `
+                IF EXISTS (SELECT 1 FROM [dbo].[MEEC_users] WHERE [User_ID] = @userId)
+                BEGIN
+                    UPDATE [dbo].[MEEC_users]
+                    SET [Name] = @name,
+                        [Surname] = @surname,
+                        [Email] = @email,
+                        [Last_Login] = GETDATE()
+                    WHERE [User_ID] = @userId
+                END
+                ELSE
+                BEGIN
+                    INSERT INTO [dbo].[MEEC_users] ([User_ID], [Name], [Surname], [Email], [Last_Login], [Created_At])
+                    VALUES (@userId, @name, @surname, @email, GETDATE(), GETDATE())
+                END
+            `;
+
+            await request.query(query);
+            console.log(`✓ User ${user.id} (${user.email}) saved/updated in database.`);
+        } catch (error) {
+            console.error('Error saving user to database:', error.message);
+            // We don't want to block login if DB save fails, but we should log it
+        }
+    }
 }
 
 module.exports = new DataService();

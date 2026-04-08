@@ -153,6 +153,41 @@ body {
   background-color: var(--primary-dark);
 }
 
+/* Premium Auth Button */
+.btn-auth-premium {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: white;
+  border: none;
+  padding: 14px 32px;
+  border-radius: 30px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 4px 15px rgba(177, 32, 40, 0.3);
+  margin-top: 24px;
+}
+
+.btn-auth-premium:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 8px 25px rgba(177, 32, 40, 0.4);
+  background: linear-gradient(135deg, var(--primary-light), var(--primary));
+}
+
+.btn-auth-premium:active {
+  transform: translateY(0) scale(1);
+}
+
+.btn-auth-premium .btn-icon {
+  width: 24px;
+  height: 24px;
+}
+
 .tagline {
   display: none;
   /* Hiding abstract tagline for official look */

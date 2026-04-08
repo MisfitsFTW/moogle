@@ -30,8 +30,29 @@ class AuthProvider {
 
         try {
             const response = await this.msalClient.acquireTokenByCode(tokenRequest);
-            req.session.user = response.account;
+
+            // Extract claims from ID Token
+            const idTokenClaims = response.idTokenClaims;
+            const userData = {
+                id: idTokenClaims.oid || idTokenClaims.sub,
+                name: idTokenClaims.given_name || idTokenClaims.name,
+                surname: idTokenClaims.family_name,
+                email: idTokenClaims.emails ? idTokenClaims.emails[0] : idTokenClaims.email
+            };
+
+            // Store in session
+            req.session.user = {
+                ...response.account,
+                name: userData.name,
+                surname: userData.surname,
+                email: userData.email
+            };
             req.session.isAuthenticated = true;
+
+            // Save to database
+            const dataService = require('./dataService');
+            await dataService.saveUser(userData);
+
             res.redirect('/');
         } catch (error) {
             next(error);

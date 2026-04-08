@@ -176,6 +176,11 @@ async function handleSubmit() {
             body: JSON.stringify({ query })
         });
 
+        if (response.status === 401) {
+            showLoginRequired();
+            return;
+        }
+
         const data = await response.json();
 
         if (!response.ok || !data.success) {
@@ -197,6 +202,34 @@ async function handleSubmit() {
         loadingState.classList.add('hidden');
         submitBtn.disabled = false;
     }
+}
+
+function showLoginRequired() {
+    hideAll();
+    errorTitle.textContent = 'Authentication Required';
+    errorMessage.textContent = 'Your session has expired or you are not logged in. Please log in to search organizational data.';
+
+    // Add premium login button to error state
+    const loginBtn = document.createElement('button');
+    loginBtn.className = 'btn btn-auth-premium';
+    loginBtn.innerHTML = `
+        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+            <polyline points="10 17 15 12 10 7"></polyline>
+            <line x1="15" y1="12" x2="3" y2="12"></line>
+        </svg>
+        <span>Secure Log In Now</span>
+    `;
+    loginBtn.onclick = () => window.location.href = '/login';
+
+    const existingBtn = errorState.querySelector('button');
+    if (existingBtn) {
+        errorState.replaceChild(loginBtn, existingBtn);
+    } else {
+        errorState.appendChild(loginBtn);
+    }
+
+    errorState.classList.remove('hidden');
 }
 
 function displayResults(data, count, summary, insight, sources) {
@@ -407,6 +440,20 @@ function showError(title, message) {
     hideAll();
     errorTitle.textContent = title;
     errorMessage.textContent = message;
+
+    // Restore default refresh button
+    const refreshBtn = document.createElement('button');
+    refreshBtn.className = 'btn btn-primary';
+    refreshBtn.textContent = 'Refresh Page';
+    refreshBtn.onclick = () => location.reload();
+
+    const existingBtn = errorState.querySelector('button');
+    if (existingBtn) {
+        errorState.replaceChild(refreshBtn, existingBtn);
+    } else {
+        errorState.appendChild(refreshBtn);
+    }
+
     errorState.classList.remove('hidden');
 }
 
