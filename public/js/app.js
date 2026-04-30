@@ -287,9 +287,42 @@ function displayResults(data, count, summary, insight, sources) {
     sourcesContainer.classList.add('hidden');
 
     if (!data || data.length === 0) {
+        if (summary) {
+            // Show AI explanation for 0 results instead of error
+            analyticalSummary.innerHTML = `
+                <div class="analysis-header">
+                    <div class="analysis-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="16" x2="12" y2="12"></line>
+                            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                        </svg>
+                    </div>
+                    <div class="analysis-title">Search Guidance</div>
+                </div>
+                <div class="analysis-content">${summary}</div>
+                <div class="analysis-footer">
+                    <span class="persona-badge">AI Assistant Guidance</span>
+                </div>
+            `;
+            analyticalSummary.classList.remove('hidden');
+            
+            // Show back button so they can search again
+            resultsSection.classList.remove('hidden');
+            resultsCount.textContent = '0 results';
+            tableHead.innerHTML = '';
+            tableBody.innerHTML = '<tr><td colspan="100%" style="text-align: center; padding: 3rem; color: var(--text-muted);">No matching records found in the database.</td></tr>';
+            exportBtn.classList.add('hidden');
+            
+            return;
+        }
+        
         showError('No Results Found', 'Your query returned no results. Try rephrasing your question.');
         return;
     }
+
+    // Ensure export button is visible for actual results
+    if (exportBtn) exportBtn.classList.remove('hidden');
 
     // Update summary & Combined Insight
     if (summary) {

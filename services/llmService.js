@@ -173,7 +173,7 @@ Return only the JSON query instructions:`;
     Guidelines:
     - The summary should be authoritative, clear and professional.
     - Join your observations together so it reads like a single analytical result.
-    - If there are no results, just say "I couldn't find any results for that query."
+    - If there are no results, explain clearly to the user why this might be (e.g., the filters might be too specific, the person or item might not exist in the database, or the query might be targeting the wrong category). Provide helpful suggestions on how they could broaden or rephrase their search.
     - Be brief but comprehensive in your analysis.
 
     Return ONLY the following JSON structure: {"analysis": "..."}`;
