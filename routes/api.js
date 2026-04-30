@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const queryController = require('../controllers/queryController');
+const uploadController = require('../controllers/uploadController');
 const authProvider = require('../services/authProvider');
 
 /**
@@ -103,5 +104,37 @@ router.get('/health', queryController.getHealth);
  *                   type: string
  */
 router.post('/query', authProvider.isAuthenticated.bind(authProvider), queryController.processQuery);
+
+/**
+ * @swagger
+ * /api/upload-csv:
+ *   post:
+ *     summary: Upload CSV data and create database table
+ *     description: Upload a CSV file to create a new table in the database. Only authenticated users can perform this action.
+ *     tags: [Data]
+ *     security:
+ *       - cookieAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               csvFile:
+ *                 type: string
+ *                 format: binary
+ *               tableName:
+ *                 type: string
+ *                 description: Optional custom table name
+ *     responses:
+ *       200:
+ *         description: CSV uploaded and processed successfully
+ *       401:
+ *         description: Unauthorized
+ *       500:
+ *         description: Server error
+ */
+router.post('/upload-csv', authProvider.isAuthenticated.bind(authProvider), uploadController.uploadCSV);
 
 module.exports = router;

@@ -21,6 +21,12 @@ const micBtn = document.getElementById('micBtn');
 const tabBtns = document.querySelectorAll('.tab-btn');
 const tabContents = document.querySelectorAll('.tab-content');
 const sourcesGrid = document.getElementById('sourcesGrid');
+const uploadSection = document.getElementById('uploadSection');
+const csvFileInput = document.getElementById('csvFileInput');
+const uploadBtn = document.getElementById('uploadBtn');
+const uploadStatus = document.getElementById('uploadStatus');
+const clearFileBtn = document.getElementById('clearFileBtn');
+const clearAllBtn = document.getElementById('clearAllBtn');
 
 // State
 let currentResults = [];
@@ -57,6 +63,15 @@ async function updateAuthUI() {
             document.getElementById('loginBtn').addEventListener('click', () => {
                 window.location.href = '/login';
             });
+        }
+
+        // Show/hide upload section based on auth
+        if (uploadSection) {
+            if (authStatus.isAuthenticated) {
+                uploadSection.classList.remove('hidden');
+            } else {
+                uploadSection.classList.add('hidden');
+            }
         }
     } catch (error) {
         console.error('Error fetching auth status:', error);
@@ -151,7 +166,40 @@ if (micBtn) {
     });
 }
 
-exportBtn.addEventListener('click', exportToCSV);
+if (exportBtn) {
+    exportBtn.addEventListener('click', exportToCSV);
+}
+
+if (uploadBtn) {
+    uploadBtn.addEventListener('click', handleFileUpload);
+}
+
+if (clearAllBtn) {
+    clearAllBtn.addEventListener('click', resetUploadSection);
+}
+
+if (clearFileBtn) {
+    clearFileBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        resetUploadSection();
+    });
+}
+
+if (csvFileInput) {
+    csvFileInput.addEventListener('change', () => {
+        const file = csvFileInput.files[0];
+        const fileName = file?.name;
+        const labelSpan = document.querySelector('.file-label span');
+        if (fileName && labelSpan) {
+            labelSpan.textContent = fileName;
+            if (clearFileBtn) clearFileBtn.classList.remove('hidden');
+        } else {
+            if (labelSpan) labelSpan.textContent = 'Choose CSV File';
+            if (clearFileBtn) clearFileBtn.classList.add('hidden');
+        }
+    });
+}
 
 // Main Functions
 async function handleSubmit() {
@@ -522,6 +570,67 @@ async function checkHealth() {
             console.log('✓ API Healthy:', data.recordCount, 'records');
         }
     } catch (e) { console.warn('Health check failed'); }
+}
+
+async function handleFileUpload() {
+    const file = csvFileInput.files[0];
+    const btnSpan = uploadBtn.querySelector('span');
+    const originalText = btnSpan ? btnSpan.textContent : 'Upload Data';
+
+    if (!file) {
+        showUploadStatus('Please select a CSV file first.', 'error');
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append('csvFile', file);
+
+    // Disable button and show loading
+    uploadBtn.disabled = true;
+    if (btnSpan) btnSpan.textContent = 'Uploading...';
+    showUploadStatus('Uploading and processing data. Please wait...', 'info');
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/upload-csv`, {
+            method: 'POST',
+            body: formData
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.success) {
+            showUploadStatus(`✓ ${data.message}`, 'success');
+            csvFileInput.value = '';
+            const labelSpan = document.querySelector('.file-label span');
+            if (labelSpan) labelSpan.textContent = 'Choose CSV File';
+            
+            // Refresh sources grid
+            loadOfficialSources();
+        } else {
+            throw new Error(data.details || data.error || 'Failed to upload CSV');
+        }
+    } catch (error) {
+        console.error('Upload error:', error);
+        showUploadStatus(`⚠ Upload failed: ${error.message}`, 'error');
+    } finally {
+        uploadBtn.disabled = false;
+        if (btnSpan) btnSpan.textContent = originalText;
+    }
+}
+
+function showUploadStatus(message, type) {
+    if (!uploadStatus) return;
+    uploadStatus.textContent = message;
+    uploadStatus.className = `upload-status ${type}`;
+    uploadStatus.classList.remove('hidden');
+}
+
+function resetUploadSection() {
+    if (csvFileInput) csvFileInput.value = '';
+    const labelSpan = document.querySelector('.file-label span');
+    if (labelSpan) labelSpan.textContent = 'Choose CSV File';
+    if (clearFileBtn) clearFileBtn.classList.add('hidden');
+    if (uploadStatus) uploadStatus.classList.add('hidden');
 }
 
 checkHealth();

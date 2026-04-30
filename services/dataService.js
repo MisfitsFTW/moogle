@@ -355,6 +355,69 @@ class DataService {
             // We don't want to block login if DB save fails, but we should log it
         }
     }
+
+    async processCSVUpload(tableName, data) {
+        if (!data || data.length === 0) {
+            throw new Error('No data provided to process');
+        }
+
+        // Clean headers and data
+        const originalHeaders = Object.keys(data[0]);
+        const cleanedHeaders = originalHeaders.map(h => 
+            h.replace(/^\uFEFF/, '').replace(/^ï»¿/, '').replace(/[\[\]]/g, '').trim()
+        );
+
+        console.log(`Headers detected: ${cleanedHeaders.join(', ')}`);
+
+        const pool = await this.connect();
+        
+        try {
+            console.log(`1. Creating table [${tableName}]...`);
+            const request = pool.request();
+            request.timeout = 30000; // 30 seconds
+
+            // DROP TABLE IF EXISTS
+            await request.query(`
+                IF OBJECT_ID('[${tableName}]', 'U') IS NOT NULL
+                DROP TABLE [${tableName}];
+            `);
+
+            const columnDefinitions = cleanedHeaders.map(col => `[${col}] NVARCHAR(MAX)`).join(', ');
+            await pool.request().query(`CREATE TABLE [${tableName}] (${columnDefinitions})`);
+
+            console.log(`✓ Table [${tableName}] created. 2. Bulk inserting ${data.length} records...`);
+
+            // 2. Bulk Insert
+            const table = new sql.Table(tableName);
+            table.create = false;
+
+            cleanedHeaders.forEach(col => {
+                table.columns.add(col, sql.NVarChar(sql.MAX), { nullable: true });
+            });
+
+            data.forEach(row => {
+                const values = originalHeaders.map(h => {
+                    const val = row[h];
+                    return (val === undefined || val === null) ? null : val.toString();
+                });
+                table.rows.add(...values);
+            });
+
+            const bulkRequest = pool.request();
+            bulkRequest.timeout = 60000; // 60 seconds for bulk
+            await bulkRequest.bulk(table);
+            
+            console.log(`✓ Bulk insert complete.`);
+
+            // 3. Refresh local cache
+            await this.loadData();
+
+            return true;
+        } catch (error) {
+            console.error('Error processing CSV upload in DB:', error);
+            throw new Error(`Database Error: ${error.message}`);
+        }
+    }
 }
 
 module.exports = new DataService();

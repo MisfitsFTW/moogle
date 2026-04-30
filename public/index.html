@@ -136,6 +136,41 @@
                             <span class="trust-badge">Real-time Data Access</span>
                         </div>
                     </div>
+                    <div id="uploadSection" class="upload-section hidden">
+                        <h3>Contribute Data</h3>
+                        <p>Upload a CSV file to add new data tables to the portal.</p>
+                        <div class="upload-container">
+                            <div class="file-input-wrapper">
+                                <input type="file" id="csvFileInput" accept=".csv" class="file-input">
+                                <label for="csvFileInput" class="file-label">
+                                    <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                        <polyline points="17 8 12 3 7 8"></polyline>
+                                        <line x1="12" y1="3" x2="12" y2="15"></line>
+                                    </svg>
+                                    <span>Choose CSV File</span>
+                                </label>
+                                <button id="clearFileBtn" class="clear-file-btn hidden" title="Clear file">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                                    </svg>
+                                </button>
+                            </div>
+                            <div class="upload-actions">
+                                <button id="uploadBtn" class="btn btn-upload">
+                                    <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                        <path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"></path>
+                                        <path d="M12 12v9"></path>
+                                        <path d="m16 16-4-4-4 4"></path>
+                                    </svg>
+                                    <span>Upload Data</span>
+                                </button>
+                                <button id="clearAllBtn" class="btn btn-clear-all" title="Clear All">Clear All</button>
+                            </div>
+                        </div>
+                        <div id="uploadStatus" class="upload-status hidden"></div>
+                    </div>
                     <div id="sourcesGrid" class="sources-grid">
                         <!-- Populated by app.js -->
                         <div class="loading-sources">
