@@ -330,6 +330,7 @@ class DataService {
             request.input('name', sql.NVarChar, user.name || null);
             request.input('surname', sql.NVarChar, user.surname || null);
             request.input('email', sql.NVarChar, user.email || null);
+            request.input('idCard', sql.NVarChar, user.idCard || null);
 
             const query = `
                 IF EXISTS (SELECT 1 FROM [dbo].[MEEC_users] WHERE [User_ID] = @userId)
@@ -338,13 +339,14 @@ class DataService {
                     SET [Name] = @name,
                         [Surname] = @surname,
                         [Email] = @email,
+                        [IdCard] = @idCard,
                         [Last_Login] = GETDATE()
                     WHERE [User_ID] = @userId
                 END
                 ELSE
                 BEGIN
-                    INSERT INTO [dbo].[MEEC_users] ([User_ID], [Name], [Surname], [Email], [Last_Login], [Created_At])
-                    VALUES (@userId, @name, @surname, @email, GETDATE(), GETDATE())
+                    INSERT INTO [dbo].[MEEC_users] ([User_ID], [Name], [Surname], [Email], [IdCard], [Last_Login], [Created_At])
+                    VALUES (@userId, @name, @surname, @email, @idCard, GETDATE(), GETDATE())
                 END
             `;
 

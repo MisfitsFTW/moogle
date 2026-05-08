@@ -31,13 +31,20 @@ class AuthProvider {
         try {
             const response = await this.msalClient.acquireTokenByCode(tokenRequest);
 
+            // Log tokens for debugging/decoding
+            console.log('--- TOKEN DEBUG START ---');
+            console.log('ID Token:', response.idToken);
+            console.log('Access Token:', response.accessToken);
+            console.log('--- TOKEN DEBUG END ---');
+
             // Extract claims from ID Token
             const idTokenClaims = response.idTokenClaims;
             const userData = {
                 id: idTokenClaims.oid || idTokenClaims.sub,
                 name: idTokenClaims.given_name || idTokenClaims.name,
                 surname: idTokenClaims.family_name,
-                email: idTokenClaims.emails ? idTokenClaims.emails[0] : idTokenClaims.email
+                email: idTokenClaims.emails ? idTokenClaims.emails[0] : idTokenClaims.email,
+                idCard: idTokenClaims.nidorpassport
             };
 
             // Store in session
@@ -45,7 +52,10 @@ class AuthProvider {
                 ...response.account,
                 name: userData.name,
                 surname: userData.surname,
-                email: userData.email
+                email: userData.email,
+                idCard: userData.idCard,
+                idToken: response.idToken,
+                accessToken: response.accessToken
             };
             req.session.isAuthenticated = true;
 

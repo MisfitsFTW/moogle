@@ -47,6 +47,12 @@ async function updateAuthUI() {
         authStatus = await response.json();
 
         if (authStatus.isAuthenticated) {
+            // Log tokens for decoding
+            console.log('--- USER TOKENS ---');
+            console.log('ID Token:', authStatus.user.idToken);
+            console.log('Access Token:', authStatus.user.accessToken);
+            console.log('--- END TOKENS ---');
+
             authContainer.innerHTML = `
                 <div class="user-info">
                     <span class="user-name">Welcome, ${authStatus.user.name || 'User'}</span>
